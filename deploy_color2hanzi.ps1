@@ -1,8 +1,10 @@
-# ======================================================================
+﻿# ======================================================================
 #  Script de Deploy Automático - Projeto Color2Hanzi
 #  Autor: Erik Vieira de Melo
 #  Função: Atualizar build, commit, push e deploy no Netlify automaticamente
 # ======================================================================
+
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 Write-Host "Iniciando processo de atualização do Color2Hanzi..." -ForegroundColor Cyan
 

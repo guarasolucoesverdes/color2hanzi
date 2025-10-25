@@ -119,17 +119,19 @@ export default function App() {
   const renderPin = useCallback((seg: Seg[]) =>
     seg.map(s => `<span class="tone${s.tone}">${esc(s.syll)}</span>${esc(s.sep)}`).join(''), [esc]);
 
+  // ADIÇÃO: classe "hanzi-font" para sincronizar a fonte via CSS var
   const renderHan = useCallback((text: string, tones: number[]) => {
     let i = 0, out = '';
     for (const c of text) {
       if (/[\u4E00-\u9FFF]/.test(c)) {
-        out += `<span class="tone${tones[i] || 5}">${esc(c)}</span>`;
+        out += `<span class="tone${tones[i] || 5} hanzi-font">${esc(c)}</span>`;
         i++;
       } else out += esc(c);
     }
     return out;
   }, [esc]);
 
+  // ADIÇÃO: "hanzi-font" também no Hanzi empilhado
   const renderStacked = useCallback((seg: Seg[], text: string) => {
     const tones = seg.map(s => s.tone);
     let i = 0, out = '';
@@ -139,7 +141,7 @@ export default function App() {
         const p = esc(seg[i]?.syll || '');
         const h = esc(c);
         const pinHTML = colorPin ? `<span class="tone${t} stack-pinyin">${p}</span>` : `<span class="stack-pinyin">${p}</span>`;
-        const hanHTML = colorHan   ? `<span class="tone${t} stack-hanzi" style="font-family:${fonts[font]}">${h}</span>`   : `<span class="stack-hanzi" style="font-family:${fonts[font]}">${h}</span>`;
+        const hanHTML = colorHan   ? `<span class="tone${t} stack-hanzi hanzi-font">${h}</span>`   : `<span class="stack-hanzi hanzi-font">${h}</span>`;
         out += `<span class="stack">${pinHTML}${hanHTML}</span>`;
         i++;
       } else out += esc(c);
@@ -245,9 +247,6 @@ export default function App() {
     }
   }, []);
 
-
-
-
   const useExample = useCallback(() => {
     setPin('Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!\n\nMei3tian1 yi1 dian3dian3!');
     setHan('把这个网站分享给也想用颜色学声调的朋友吧！\n\n每天一点点');
@@ -287,6 +286,12 @@ export default function App() {
     document.head.appendChild(script);
   }, []);
 
+  // SINCRONIZAÇÃO DE FONTE: atualiza var CSS global e re-renderiza
+  useEffect(() => {
+    document.documentElement.style.setProperty('--hanzi-font', fonts[font]);
+    if (pin || han) process();
+  }, [font, process, pin, han]);
+
   return (
     <>
       <title>Color2Hanzi - Colorize Pinyin & Hanzi by Tones | Free Chinese Learning Tool</title>
@@ -323,27 +328,21 @@ export default function App() {
           vertical-align: middle;
           line-height: normal;
           overflow: visible;
-          padding-bottom: 4px; /* garante espaço extra no render */
+          padding-bottom: 4px;
           margin: 0 3px;
         }
-        
         .stack-pinyin {
-          font-size: 0.95rem;
-          line-height: 1.1rem;
-          margin-bottom: 0.35rem; /* mais respiro entre pinyin e hanzi */
+          font-size: 0.7rem;           /* antes 0.95rem */
+          line-height: 0.85rem;        /* antes 1.1rem */
+          margin-bottom: 0.2rem;       /* espaço ligeiramente menor */
+          font-family:'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
+          letter-spacing:0.25px;
         }
-        
         .stack-hanzi {
-          font-size: 1.55rem;
+          font-size: 1.75rem;
           line-height: 1.35rem;
           margin-top: 0;
         }
-        .stack-pinyin {
-          font-family:'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
-          letter-spacing:0.3px;
-        }
-
-
         .fontpicker{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
         .fontpicker span{font-weight:600;font-size:0.9rem;margin-right:4px}
         .chip{background:#f7f7f7;color:#222;border:1px solid #ddd;border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;transition:all .2s;font-size:0.9rem}
@@ -367,9 +366,6 @@ export default function App() {
       </div>
 
       <main className="container">
-        {/* Toggle */}
-
-
         {/* Title */}
         <h1 className="title">
           <span style={{color:'#000'}}>Color2</span>
@@ -414,7 +410,6 @@ export default function App() {
                 onChange={e => setHan(e.target.value)}
                 style={{marginTop:'10px'}}
               />
-              
             </section>
 
             {/* Button */}
@@ -472,9 +467,8 @@ export default function App() {
                 </div>
                 <div 
                   id="outHan" 
-                  className="out" 
+                  className="out hanzi-font" 
                   ref={hanRef}
-                  style={{fontFamily:fonts[font]}}
                   dangerouslySetInnerHTML={{__html:outHan}}
                 />
               </div>
@@ -503,7 +497,7 @@ export default function App() {
                 </div>
                 <div 
                   id="outStack" 
-                  className="out" 
+                  className="out hanzi-font" 
                   ref={stackRef}
                   dangerouslySetInnerHTML={{__html:outStack}}
                 />
