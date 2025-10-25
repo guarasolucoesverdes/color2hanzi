@@ -129,65 +129,6 @@
   }
 }
 
-/**
- * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
- */
-@layer base {
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
-    h1 {
-      font-size: var(--text-2xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    h2 {
-      font-size: var(--text-xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    h3 {
-      font-size: var(--text-lg);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    h4 {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    p {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
-
-    label {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    button {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    input {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
-  }
-}
-
-html {
-  font-size: var(--font-size);
-}
-
 /* === Color2Hanzi Button Styling === */
 .btn-group {
   display: flex;
@@ -237,55 +178,63 @@ html {
   color: var(--color-primary-foreground);
 }
 
-/* === Fixes for html2canvas rendering and character clipping === */
-.out span {
-  overflow: visible;
-}
-
-.stack {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  vertical-align: middle;
-  overflow: visible;
-  line-height: normal;
-  padding-bottom: 6px; /* espaço extra para o print */
-  margin: 0 3px;
-}
-
-.stack-pinyin {
-  font-size: 0.2rem;         /* antes 0.95rem */
-  line-height: 0.6rem;       /* antes 1.1rem */
-  margin-bottom: 0.2rem;    /* espaço ligeiramente menor */
-  font-family:'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
-  letter-spacing:0.2px;
-}
-
-
-.stack-hanzi {
-  display: inline-block;
-  font-size: 1.7rem;
-  line-height: 1.35rem;
-  overflow: visible;
-  transform: translateY(0.5px); /* evita corte visual na base */
-}
-
-/* Ajuste leve para espaçamento interno dos blocos de output */
-.out {
-  padding-bottom: 6px;
-}
-
 /* ================================ */
 /*  ADIÇÕES PARA SINCRONIZAR FONTE  */
 /* ================================ */
 :root {
-  /* fonte padrão inicial para Hanzi (sobrescrita via JS) */
   --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif;
 }
 
-/* aplique esta classe em todos os hanzi (inclui empilhado) */
 .hanzi-font {
   font-family: var(--hanzi-font) !important;
   transition: font-family 0.2s ease;
 }
+
+/* ==== Color2Hanzi: alinhamento preciso do empilhado ==== */
+.out {
+  display: block;
+  white-space: pre-wrap;
+  line-height: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.out .stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+  padding: 0;
+  vertical-align: middle;
+  overflow: visible;
+  line-height: 1;
+  height: 3rem; /* ↑ aumenta o espaçamento total */
+}
+
+.out .stack-pinyin {
+  font-size: 0.75rem;
+  line-height: 0.9rem;
+  margin-bottom: 0.0rem; /* ↑ aumenta o espaço entre pinyin e hanzi */
+  text-align: center;
+  font-family: 'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
+  position: relative;
+  z-index: 1;
+}
+
+.out .stack-hanzi {
+  font-size: 1.65rem;
+  line-height: 1.2rem;
+  text-align: center;
+  position: relative;
+  z-index: 0;
+}
+
+.out br {
+  display: block;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  content: "";
+}
+
+

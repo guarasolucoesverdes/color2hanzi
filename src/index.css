@@ -24,11 +24,6 @@
   :root, :host {
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --text-base: 1rem;
-    --text-lg: 1.125rem;
-    --text-xl: 1.25rem;
-    --text-2xl: 1.5rem;
-    --font-weight-normal: 400;
     --font-weight-medium: 500;
     --radius-md: calc(var(--radius)  - 2px);
     --default-font-family: var(--font-sans);
@@ -311,48 +306,6 @@
     background-color: var(--background);
     color: var(--foreground);
   }
-
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) p {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
-  }
-
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) label, :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) button {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
-  }
 }
 
 @layer utilities {
@@ -510,10 +463,6 @@
   --sidebar-ring: oklch(.439 0 0);
 }
 
-html {
-  font-size: var(--font-size);
-}
-
 .btn-group {
   flex-wrap: wrap;
   gap: .5rem;
@@ -561,42 +510,6 @@ html {
   color: var(--color-primary-foreground);
 }
 
-.out span {
-  overflow: visible;
-}
-
-.stack {
-  vertical-align: middle;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0 3px;
-  padding-bottom: 6px;
-  line-height: normal;
-  display: inline-flex;
-  overflow: visible;
-}
-
-.stack-pinyin {
-  letter-spacing: .2px;
-  margin-bottom: .2rem;
-  font-size: .2rem;
-  line-height: .6rem;
-  font-family: Inter, Noto Sans, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif !important;
-}
-
-.stack-hanzi {
-  font-size: 1.7rem;
-  line-height: 1.35rem;
-  display: inline-block;
-  overflow: visible;
-  transform: translateY(.5px);
-}
-
-.out {
-  padding-bottom: 6px;
-}
-
 :root {
   --hanzi-font: "Noto Serif SC", "Noto Serif Simplified Chinese", serif;
 }
@@ -604,6 +517,52 @@ html {
 .hanzi-font {
   transition: font-family .2s;
   font-family: var(--hanzi-font) !important;
+}
+
+.out {
+  white-space: pre-wrap;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  display: block;
+}
+
+.out .stack {
+  vertical-align: middle;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+  margin: 0 2px;
+  padding: 0;
+  line-height: 1;
+  display: inline-flex;
+  overflow: visible;
+}
+
+.out .stack-pinyin {
+  text-align: center;
+  z-index: 1;
+  margin-bottom: 0;
+  font-size: .75rem;
+  line-height: .9rem;
+  position: relative;
+  font-family: Inter, Noto Sans, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif !important;
+}
+
+.out .stack-hanzi {
+  text-align: center;
+  z-index: 0;
+  font-size: 1.65rem;
+  line-height: 1.2rem;
+  position: relative;
+}
+
+.out br {
+  content: "";
+  height: 1.5rem;
+  line-height: 1.5rem;
+  display: block;
 }
 
 @property --tw-border-style {

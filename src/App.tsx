@@ -390,28 +390,17 @@ export default function App() {
         .block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600;gap:8px;flex-wrap:wrap}
         .out{font-size:1.15rem;line-height:1.9rem;white-space:pre-wrap;display:inline-block;overflow:visible;padding:4px 8px;margin:0;background:transparent}
         #outHan{font-size:1.6rem}
-        .stack {
-          display: inline-flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-start;
-          vertical-align: middle;
-          line-height: normal;
+        .out {
+          font-size: 1.15rem;
+          line-height: 2.6rem; /* garante espaçamento entre linhas */
+          white-space: pre-wrap;
+          display: block;
           overflow: visible;
-          padding-bottom: 4px;
-          margin: 0 3px;
-        }
-        .stack-pinyin {
-          font-size: 0.7rem;
-          line-height: 0.85rem;
-          margin-bottom: 0.2rem;
-          font-family:'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
-          letter-spacing:0.25px;
-        }
-        .stack-hanzi {
-          font-size: 1.75rem;
-          line-height: 1.35rem;
-          margin-top: 0;
+          padding: 4px 8px;
+          margin: 0;
+          background: transparent;
+          vertical-align: top;
+          text-align: left;
         }
         .fontpicker{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
         .fontpicker span{font-weight:600;font-size:0.9rem;margin-right:4px}
