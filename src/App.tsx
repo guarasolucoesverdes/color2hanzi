@@ -43,6 +43,7 @@ export default function App() {
     1: /[āēīōūǖ]/i, 2: /[áéíóúǘ]/i, 3: /[ǎěǐǒǔǚ]/i, 4: /[àèìòùǜ]/i
   };
 
+  // ---- helpers de pinyin: normalize + aplicar acento por regra oficial ----
   const normalize = useCallback((p: string) => {
     const m: Record<string, string> = {
       'ā':'a','á':'a','ǎ':'a','à':'a','ē':'e','é':'e','ě':'e','è':'e',
@@ -51,6 +52,16 @@ export default function App() {
     };
     return p.replace(/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]/g, c => m[c] || c);
   }, []);
+
+  const accentMap: Record<string, string[]> = {
+    'a': ['ā','á','ǎ','à'],
+    'e': ['ē','é','ě','è'],
+    'i': ['ī','í','ǐ','ì'],
+    'o': ['ō','ó','ǒ','ò'],
+    'u': ['ū','ú','ǔ','ù'],
+    'v': ['ǖ','ǘ','ǚ','ǜ'], // v = ü
+    'ü': ['ǖ','ǘ','ǚ','ǜ'],
+  };
 
   const isLetter = useCallback((c: string) => /[A-Za-zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]/.test(c), []);
   
@@ -63,6 +74,64 @@ export default function App() {
   const esc = useCallback((s: string) => 
     s.replace(/[&<>"']/g, m => ({'&':'&','<':'<','>':'>','"':'&quot;',"'":'&#39;'}[m]||m)), []);
 
+  // Aplica diacrítico correto a uma sílaba base + tom (1–4); tom 5 retorna sem acento.
+  const applyTone = useCallback((syllBase: string, tone: number): string => {
+    if (tone === 5 || tone === 0) {
+      // apenas normaliza 'v' -> 'ü' na saída
+      return syllBase.replace(/v/g, 'ü');
+    }
+    const lower = syllBase.toLowerCase();
+    const base = lower.replace(/v/g, 'v'); // manter 'v' como 'v' para mapear em ü
+
+    // regra de escolha do núcleo:
+    // 1) se houver 'a' ou 'e' → acente esse
+    // 2) se houver 'ou' → acente o 'o'
+    // 3) caso contrário, acente a ÚLTIMA vogal (entre i o u v/ü)
+    const vowels = Array.from(base).map((ch, idx) => ({ ch, idx }))
+      .filter(o => 'aeiouv'.includes(o.ch));
+
+    if (vowels.length === 0) return syllBase.replace(/v/g, 'ü');
+
+    let targetIndex = -1;
+
+    if (base.includes('a')) {
+      targetIndex = base.indexOf('a');
+    } else if (base.includes('e')) {
+      targetIndex = base.indexOf('e');
+    } else if (base.includes('ou')) {
+      targetIndex = base.indexOf('o');
+    } else {
+      // última vogal
+      for (let i = vowels.length - 1; i >= 0; i--) {
+        const c = vowels[i].ch;
+        if ('aeiouv'.includes(c)) {
+          targetIndex = vowels[i].idx;
+          break;
+        }
+      }
+    }
+
+    if (targetIndex < 0) return syllBase.replace(/v/g, 'ü');
+
+    const chars = Array.from(base);
+    const v = chars[targetIndex];
+
+    const table = accentMap[v] || null;
+    if (!table) return syllBase.replace(/v/g, 'ü');
+
+    const mark = table[tone - 1] || v;
+    chars[targetIndex] = mark;
+
+    const out = chars.join('').replace(/v/g, 'ü');
+
+    // manter capitalização inicial se a sílaba original tinha inicial maiúscula
+    if (/^[A-Z]/.test(syllBase)) {
+      return out.charAt(0).toUpperCase() + out.slice(1);
+    }
+    return out;
+  }, [accentMap]);
+
+  // Segmenta o texto de pinyin (com número ou acento) em sílabas reconhecidas
   const segment = useCallback((text: string): Seg[] => {
     const res: Seg[] = [];
     let i = 0, N = text.length;
@@ -116,10 +185,17 @@ export default function App() {
     return res;
   }, [isLetter, normalize, getTone, syllables]);
 
+  // --- Renderizadores (sempre com acento visual na saída) ---
   const renderPin = useCallback((seg: Seg[]) =>
-    seg.map(s => `<span class="tone${s.tone}">${esc(s.syll)}</span>${esc(s.sep)}`).join(''), [esc]);
+    seg
+      .map(s => {
+        const accented = applyTone(s.syll, s.tone);
+        return `<span class="tone${s.tone}">${esc(accented)}</span>${esc(s.sep)}`;
+      })
+      .join(''),
+    [esc, applyTone]
+  );
 
-  // ADIÇÃO: classe "hanzi-font" para sincronizar a fonte via CSS var
   const renderHan = useCallback((text: string, tones: number[]) => {
     let i = 0, out = '';
     for (const c of text) {
@@ -131,14 +207,13 @@ export default function App() {
     return out;
   }, [esc]);
 
-  // ADIÇÃO: "hanzi-font" também no Hanzi empilhado
   const renderStacked = useCallback((seg: Seg[], text: string) => {
     const tones = seg.map(s => s.tone);
     let i = 0, out = '';
     for (const c of text) {
       if (/[\u4E00-\u9FFF]/.test(c)) {
         const t = tones[i] || 5;
-        const p = esc(seg[i]?.syll || '');
+        const p = esc(applyTone(seg[i]?.syll || '', t));
         const h = esc(c);
         const pinHTML = colorPin ? `<span class="tone${t} stack-pinyin">${p}</span>` : `<span class="stack-pinyin">${p}</span>`;
         const hanHTML = colorHan   ? `<span class="tone${t} stack-hanzi hanzi-font">${h}</span>`   : `<span class="stack-hanzi hanzi-font">${h}</span>`;
@@ -147,14 +222,14 @@ export default function App() {
       } else out += esc(c);
     }
     return out;
-  }, [esc, colorPin, colorHan]);
+  }, [esc, colorPin, colorHan, applyTone]);
 
   const process = useCallback(() => {
     const seg = segment(pin);
     const tones = seg.map(s => s.tone);
-    setOutPin(renderPin(seg));
+    setOutPin(renderPin(seg));              // Pinyin sempre acentuado na saída
     setOutHan(renderHan(han, tones));
-    setOutStack(renderStacked(seg, han));
+    setOutStack(renderStacked(seg, han));   // Pinyin empilhado acentuado
     const hc = (han.match(/[\u4E00-\u9FFF]/g) || []).length;
     setWarn(seg.length !== hc ? `${seg.length} syllable(s) × ${hc} character(s).` : '');
   }, [pin, han, segment, renderPin, renderHan, renderStacked]);
@@ -176,7 +251,7 @@ export default function App() {
     const el = ref.current;
     el.style.display = 'inline-block';
     el.style.padding = '8px 8px 12px 8px';
-    el.style.borderBottom = '4px solid transparent'; // reserva espaço extra
+    el.style.borderBottom = '4px solid transparent';
   
     // @ts-ignore - html2canvas loaded via CDN
     if (!window.html2canvas) {
@@ -185,9 +260,7 @@ export default function App() {
     }
   
     try {
-      // pequeno atraso para renderizar completamente antes da captura
       await new Promise(r => setTimeout(r, 120));
-  
       // @ts-ignore
       const canvas = await window.html2canvas(el, { backgroundColor: null, scale: 3, useCORS: true });
       const link = document.createElement('a');
@@ -195,7 +268,6 @@ export default function App() {
       link.href = canvas.toDataURL('image/png');
       link.click();
   
-      // restaura o estilo original
       el.style.borderBottom = '';
       el.style.padding = '4px 8px';
       alert('✅ Image saved!');
@@ -203,7 +275,6 @@ export default function App() {
       alert('❌ Could not save image');
     }
   }, []);
-
 
   const copyImg = useCallback(async (ref: React.RefObject<HTMLDivElement>) => {
     if (!ref.current || typeof window === 'undefined') return;
@@ -220,7 +291,6 @@ export default function App() {
   
     try {
       await new Promise(r => setTimeout(r, 120));
-  
       // @ts-ignore
       const canvas = await window.html2canvas(el, { backgroundColor: null, scale: 3, useCORS: true });
       el.style.borderBottom = '';
@@ -248,8 +318,8 @@ export default function App() {
   }, []);
 
   const useExample = useCallback(() => {
-    setPin('Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!\n\nMei3tian1 yi1 dian3dian3!');
-    setHan('把这个网站分享给也想用颜色学声调的朋友吧！\n\n每天一点点');
+    setPin('Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!\nMei3tian1 yi1 dian3dian3!'); // exemplo numérico → sairá "wǒ shì bāxīrén"
+    setHan('把这个网站分享给也想用颜色学声调的朋友吧!\n每天一点点');
     setTimeout(process, 50);
   }, [process]);
 
@@ -290,7 +360,7 @@ export default function App() {
   useEffect(() => {
     document.documentElement.style.setProperty('--hanzi-font', fonts[font]);
     if (pin || han) process();
-  }, [font, process, pin, han]);
+  }, [font]);
 
   return (
     <>
@@ -332,9 +402,9 @@ export default function App() {
           margin: 0 3px;
         }
         .stack-pinyin {
-          font-size: 0.7rem;           /* antes 0.95rem */
-          line-height: 0.85rem;        /* antes 1.1rem */
-          margin-bottom: 0.2rem;       /* espaço ligeiramente menor */
+          font-size: 0.7rem;
+          line-height: 0.85rem;
+          margin-bottom: 0.2rem;
           font-family:'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
           letter-spacing:0.25px;
         }
@@ -358,6 +428,9 @@ export default function App() {
         .ad-top{background:#f9f9f9;padding:12px 0;border-bottom:1px solid #e5e5e5;margin-bottom:16px}
         @media(min-width:1024px){.grid{grid-template-columns:1fr 320px}}
         @media(max-width:640px){.title{font-size:1.8rem}.toggle{position:static;margin-bottom:16px}}
+        /* Hanzi font var */
+        :root { --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif; }
+        .hanzi-font { font-family: var(--hanzi-font) !important; }
       `}</style>
 
       {/* Top Ad */}
@@ -391,7 +464,7 @@ export default function App() {
                 id="pin"
                 aria-label="Enter Pinyin"
                 maxLength={100000}
-                placeholder="Example:&#10;Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!&#10;&#10;Mei3tian1 yi1 dian3dian3!"
+                placeholder="Example:&#10;Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!&#10;Mei3tian1 yi1 dian3dian3!"
                 value={pin}
                 onChange={e => setPin(e.target.value)}
               />
@@ -405,7 +478,7 @@ export default function App() {
                 id="han"
                 aria-label="Enter Hanzi characters"
                 maxLength={100000}
-                placeholder="Example:&#10;把这个网站分享给也想用颜色学声调的朋友吧！&#10;&#10;每天一点点"
+                placeholder="Example:&#10;把这个网站分享给也想用颜色学声调的朋友吧!&#10;每天一点点"
                 value={han}
                 onChange={e => setHan(e.target.value)}
                 style={{marginTop:'10px'}}
