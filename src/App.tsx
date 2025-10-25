@@ -286,7 +286,9 @@ export default function App() {
         textarea::placeholder{color:#999}
         .btn{display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border-radius:8px;border:0;background:#111;color:#fff;font-weight:600;cursor:pointer;font-size:1rem;transition:background .2s}
         .btn:hover{background:#000}
-        .btn-lg{font-size:1.2rem;padding:10px 18px}
+        .btn-lg{font-size:1.2rem;padding:14px 32px;background:linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);background-size:300% 100%;box-shadow:0 4px 10px rgba(0,0,0,0.1);transition:all 0.4s ease;border-radius:10px}
+        .btn-lg:hover{background-position:right center;transform:scale(1.03);background:linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);background-size:300% 100%}
+        .btn-lg:active{transform:scale(0.97)}
         .btn-sec{background:#f2f2f2;color:#111;font-size:0.9rem;padding:6px 12px}
         .btn-sec:hover{background:#e5e5e5}
         .small{font-size:0.9rem;color:#555;margin-top:8px}
@@ -363,6 +365,7 @@ export default function App() {
             {/* Hanzi */}
             <section aria-labelledby="hanzi-h" style={{marginTop:'24px'}}>
               <h1 id="hanzi-h">Hanzi</h1>
+              <div className="small">*The Hanzi colors will follow the same order as the Pinyin tones.</div>
               <textarea
                 id="han"
                 aria-label="Enter Hanzi characters"
@@ -372,24 +375,17 @@ export default function App() {
                 onChange={e => setHan(e.target.value)}
                 style={{marginTop:'10px'}}
               />
-              <div className="small">*The Hanzi colors will follow the same order as the Pinyin tones.</div>
+              
             </section>
 
             {/* Button */}
-            <div style={{marginTop:'12px',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
+            <div style={{marginTop:'20px',textAlign:'center'}}>
+              <p style={{color:'#444',fontSize:'0.95rem',marginBottom:'15px'}}>
+                Enter your text above and click below to color the tones.
+              </p>
               <button className="btn btn-lg" onClick={process} aria-label="Colorize text by tones">
-                <MousePointerClick size={20} strokeWidth={2.5} />
-                <span style={{color:'#fff'}}>Color2</span>
-                <span className="tone1">H</span>
-                <span className="tone2">a</span>
-                <span className="tone3">n</span>
-                <span className="tone4">z</span>
-                <span className="tone5">i</span>
+                🎨 <span style={{color:'#fff'}}>Generate</span>
               </button>
-              <div style={{display:'flex',alignItems:'center',gap:'6px',color:'#555',fontSize:'0.95rem',fontStyle:'italic'}}>
-                <ArrowLeft size={20} strokeWidth={2.5} />
-                <span>Click here to color the hanzi and pinyin</span>
-              </div>
             </div>
 
             {/* Warning */}
@@ -402,8 +398,8 @@ export default function App() {
                   <span id="out-pin-h">Colored Pinyin</span>
                   <div className="btn-group">
                     <button className="btn-sec" onClick={() => copy(pinRef)}>📋 Copy</button>
-                    <button className="btn-sec" onClick={() => saveImg(pinRef, 'outPin')}>💾 Save Image</button>
-                    <button className="btn-sec" onClick={() => copyImg(pinRef)}>📋 Copy Image</button>
+                    <button className="btn-sec" onClick={() => saveImg(pinRef, 'outPin')}>💾 Save</button>
+                    <button className="btn-sec" onClick={() => copyImg(pinRef)}>🖼️ Print</button>
                   </div>
                 </div>
                 <div id="outPin" className="out" ref={pinRef} dangerouslySetInnerHTML={{__html:outPin}} />
@@ -431,8 +427,8 @@ export default function App() {
                   </div>
                   <div className="btn-group">
                     <button className="btn-sec" onClick={() => copy(hanRef)}>📋 Copy</button>
-                    <button className="btn-sec" onClick={() => saveImg(hanRef, 'outHan')}>💾 Save Image</button>
-                    <button className="btn-sec" onClick={() => copyImg(hanRef)}>📋 Copy Image</button>
+                    <button className="btn-sec" onClick={() => saveImg(hanRef, 'outHan')}>💾 Save</button>
+                    <button className="btn-sec" onClick={() => copyImg(hanRef)}>🖼️ Print</button>
                   </div>
                 </div>
                 <div 
@@ -462,8 +458,8 @@ export default function App() {
                   </div>
                   <div className="btn-group">
                     <button className="btn-sec" onClick={() => copy(stackRef)}>📋 Copy</button>
-                    <button className="btn-sec" onClick={() => saveImg(stackRef, 'outStack')}>💾 Save Image</button>
-                    <button className="btn-sec" onClick={() => copyImg(stackRef)}>📋 Copy Image</button>
+                    <button className="btn-sec" onClick={() => saveImg(stackRef, 'outStack')}>💾 Save</button>
+                    <button className="btn-sec" onClick={() => copyImg(stackRef)}>🖼️ Print</button>
                   </div>
                 </div>
                 <div 

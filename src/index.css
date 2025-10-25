@@ -17,12 +17,18 @@
     --text-2xl: 1.5rem;
     --font-weight-normal: 400;
     --font-weight-medium: 500;
+    --radius-md: calc(var(--radius)  - 2px);
     --default-font-family: var(--font-sans);
     --default-font-feature-settings: var(--font-sans--font-feature-settings);
     --default-font-variation-settings: var(--font-sans--font-variation-settings);
     --default-mono-font-family: var(--font-mono);
     --default-mono-font-feature-settings: var(--font-mono--font-feature-settings);
     --default-mono-font-variation-settings: var(--font-mono--font-variation-settings);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-border: var(--border);
   }
 }
 
@@ -395,10 +401,6 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
-
-  .italic {
-    font-style: italic;
-  }
 }
 
 :root {
@@ -481,6 +483,53 @@
 
 html {
   font-size: var(--font-size);
+}
+
+.btn-group {
+  flex-wrap: wrap;
+  gap: .5rem;
+  display: flex;
+}
+
+.btn-sec {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  min-width: 90px;
+  color: var(--color-foreground);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  font-size: .875rem;
+  transition: all .25s;
+  display: inline-flex;
+  box-shadow: 0 1px 3px #0000000f;
+}
+
+.btn-sec:hover {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.btn-sec:active {
+  box-shadow: none;
+  transform: scale(.97);
+}
+
+.dark .btn-sec {
+  background: var(--color-card);
+  color: var(--color-foreground);
+  border-color: var(--color-border);
+}
+
+.dark .btn-sec:hover {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
 }
 
 @property --tw-border-style {
