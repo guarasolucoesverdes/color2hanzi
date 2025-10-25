@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback, memo, useEffect } from 'react';
-import { ArrowLeft, MousePointerClick } from 'lucide-react';
 
 // Lightweight AdSense - memoized for performance
 const AdSlot = memo(({ width, height, slot }: { width: number; height: number; slot: string }) => (
@@ -28,6 +27,7 @@ export default function App() {
   const [warn, setWarn] = useState('');
   const [font, setFont] = useState(0);
 
+  // Ativos por padrão
   const [colorPin, setColorPin] = useState(true);
   const [colorHan, setColorHan] = useState(true);
   
@@ -77,31 +77,29 @@ export default function App() {
   // Aplica diacrítico correto a uma sílaba base + tom (1–4); tom 5 retorna sem acento.
   const applyTone = useCallback((syllBase: string, tone: number): string => {
     if (tone === 5 || tone === 0) {
-      // apenas normaliza 'v' -> 'ü' na saída
       return syllBase.replace(/v/g, 'ü');
     }
-    const lower = syllBase.toLowerCase();
-    const base = lower.replace(/v/g, 'v'); // manter 'v' como 'v' para mapear em ü
+    // Remover qualquer acento prévio para evitar "dois acentos"
+    const lower = normalize(syllBase).toLowerCase();
 
     // regra de escolha do núcleo:
     // 1) se houver 'a' ou 'e' → acente esse
     // 2) se houver 'ou' → acente o 'o'
     // 3) caso contrário, acente a ÚLTIMA vogal (entre i o u v/ü)
-    const vowels = Array.from(base).map((ch, idx) => ({ ch, idx }))
+    const vowels = Array.from(lower).map((ch, idx) => ({ ch, idx }))
       .filter(o => 'aeiouv'.includes(o.ch));
 
     if (vowels.length === 0) return syllBase.replace(/v/g, 'ü');
 
     let targetIndex = -1;
 
-    if (base.includes('a')) {
-      targetIndex = base.indexOf('a');
-    } else if (base.includes('e')) {
-      targetIndex = base.indexOf('e');
-    } else if (base.includes('ou')) {
-      targetIndex = base.indexOf('o');
+    if (lower.includes('a')) {
+      targetIndex = lower.indexOf('a');
+    } else if (lower.includes('e')) {
+      targetIndex = lower.indexOf('e');
+    } else if (lower.includes('ou')) {
+      targetIndex = lower.indexOf('o');
     } else {
-      // última vogal
       for (let i = vowels.length - 1; i >= 0; i--) {
         const c = vowels[i].ch;
         if ('aeiouv'.includes(c)) {
@@ -113,7 +111,7 @@ export default function App() {
 
     if (targetIndex < 0) return syllBase.replace(/v/g, 'ü');
 
-    const chars = Array.from(base);
+    const chars = Array.from(lower);
     const v = chars[targetIndex];
 
     const table = accentMap[v] || null;
@@ -129,7 +127,7 @@ export default function App() {
       return out.charAt(0).toUpperCase() + out.slice(1);
     }
     return out;
-  }, [accentMap]);
+  }, [normalize]);
 
   // Segmenta o texto de pinyin (com número ou acento) em sílabas reconhecidas
   const segment = useCallback((text: string): Seg[] => {
@@ -171,8 +169,10 @@ export default function App() {
           h++;
           continue;
         }
-        
-        res.push({ syll: matched.base, tone: getTone(matched.raw), sep: '' });
+
+        // Guardamos a sílaba BASE sem acento (normalizada) para evitar duplo acento
+        const tone = getTone(matched.raw);
+        res.push({ syll: normalize(matched.base), tone, sep: '' });
         h += matched.raw.length;
       }
       
@@ -224,12 +224,13 @@ export default function App() {
     return out;
   }, [esc, colorPin, colorHan, applyTone]);
 
+  // Processar **somente** ao clicar em Generate
   const process = useCallback(() => {
     const seg = segment(pin);
     const tones = seg.map(s => s.tone);
-    setOutPin(renderPin(seg));              // Pinyin sempre acentuado na saída
+    setOutPin(renderPin(seg));
     setOutHan(renderHan(han, tones));
-    setOutStack(renderStacked(seg, han));   // Pinyin empilhado acentuado
+    setOutStack(renderStacked(seg, han));
     const hc = (han.match(/[\u4E00-\u9FFF]/g) || []).length;
     setWarn(seg.length !== hc ? `${seg.length} syllable(s) × ${hc} character(s).` : '');
   }, [pin, han, segment, renderPin, renderHan, renderStacked]);
@@ -318,7 +319,7 @@ export default function App() {
   }, []);
 
   const useExample = useCallback(() => {
-    setPin('Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!\nMei3tian1 yi1 dian3dian3!'); // exemplo numérico → sairá "wǒ shì bāxīrén"
+    setPin('Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!\nMei3tian1 yi1 dian3dian3!');
     setHan('把这个网站分享给也想用颜色学声调的朋友吧!\n每天一点点');
     setTimeout(process, 50);
   }, [process]);
@@ -356,10 +357,9 @@ export default function App() {
     document.head.appendChild(script);
   }, []);
 
-  // SINCRONIZAÇÃO DE FONTE: atualiza var CSS global e re-renderiza
+  // Atualiza apenas a variável de fonte; não processa automaticamente
   useEffect(() => {
     document.documentElement.style.setProperty('--hanzi-font', fonts[font]);
-    if (pin || han) process();
   }, [font]);
 
   return (
@@ -554,11 +554,11 @@ export default function App() {
                   <span id="out-stack-h">Pinyin + Hanzi (Stacked)</span>
                   <div className="options">
                     <label>
-                      <input type="checkbox" checked={colorPin} onChange={e => { setColorPin(e.target.checked); setTimeout(process, 10); }} />
+                      <input type="checkbox" checked={colorPin} onChange={e => setColorPin(e.target.checked)} />
                       Color Pinyin
                     </label>
                     <label>
-                      <input type="checkbox" checked={colorHan} onChange={e => { setColorHan(e.target.checked); setTimeout(process, 10); }} />
+                      <input type="checkbox" checked={colorHan} onChange={e => setColorHan(e.target.checked)} />
                       Color Hanzi
                     </label>
                   </div>
