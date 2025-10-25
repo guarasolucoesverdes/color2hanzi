@@ -237,3 +237,38 @@ html {
   color: var(--color-primary-foreground);
 }
 
+/* === Fixes for html2canvas rendering and character clipping === */
+.out span {
+  overflow: visible;
+}
+
+.stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  vertical-align: middle;
+  overflow: visible;
+  line-height: normal;
+  padding-bottom: 6px; /* espaço extra para o print */
+  margin: 0 3px;
+}
+
+.stack-pinyin {
+  font-size: 0.95rem;
+  line-height: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.stack-hanzi {
+  display: inline-block;
+  font-size: 1.55rem;
+  line-height: 1.35rem;
+  overflow: visible;
+  transform: translateY(0.5px); /* evita corte visual na base */
+}
+
+/* Ajuste leve para espaçamento interno dos blocos de output */
+.out {
+  padding-bottom: 6px;
+}

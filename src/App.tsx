@@ -173,42 +173,57 @@ export default function App() {
     if (!ref.current || typeof window === 'undefined') return;
     const el = ref.current;
     el.style.display = 'inline-block';
-    el.style.padding = '4px 8px';
-    
+    el.style.padding = '8px 8px 12px 8px';
+    el.style.borderBottom = '4px solid transparent'; // reserva espaço extra
+  
     // @ts-ignore - html2canvas loaded via CDN
     if (!window.html2canvas) {
-      alert('⚠️ Screenshot library not loaded');
+      alert('Screenshot library not loaded');
       return;
     }
-    
+  
     try {
+      // pequeno atraso para renderizar completamente antes da captura
+      await new Promise(r => setTimeout(r, 120));
+  
       // @ts-ignore
       const canvas = await window.html2canvas(el, { backgroundColor: null, scale: 3, useCORS: true });
       const link = document.createElement('a');
       link.download = `${name}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
+  
+      // restaura o estilo original
+      el.style.borderBottom = '';
+      el.style.padding = '4px 8px';
       alert('✅ Image saved!');
     } catch (e) {
       alert('❌ Could not save image');
     }
   }, []);
 
+
   const copyImg = useCallback(async (ref: React.RefObject<HTMLDivElement>) => {
     if (!ref.current || typeof window === 'undefined') return;
     const el = ref.current;
     el.style.display = 'inline-block';
-    el.style.padding = '4px 8px';
-    
+    el.style.padding = '8px 8px 12px 8px';
+    el.style.borderBottom = '4px solid transparent';
+  
     // @ts-ignore
     if (!window.html2canvas) {
-      alert('⚠️ Screenshot library not loaded');
+      alert('Screenshot library not loaded');
       return;
     }
-    
+  
     try {
+      await new Promise(r => setTimeout(r, 120));
+  
       // @ts-ignore
       const canvas = await window.html2canvas(el, { backgroundColor: null, scale: 3, useCORS: true });
+      el.style.borderBottom = '';
+      el.style.padding = '4px 8px';
+  
       canvas.toBlob(async (blob: Blob | null) => {
         if (!blob) {
           alert('❌ Unable to create image');
@@ -229,6 +244,9 @@ export default function App() {
       alert('❌ Could not copy image');
     }
   }, []);
+
+
+
 
   const useExample = useCallback(() => {
     setPin('Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!\n\nMei3tian1 yi1 dian3dian3!');
@@ -297,9 +315,30 @@ export default function App() {
         .block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600;gap:8px;flex-wrap:wrap}
         .out{font-size:1.15rem;line-height:1.9rem;white-space:pre-wrap;display:inline-block;overflow:visible;padding:4px 8px;margin:0;background:transparent}
         #outHan{font-size:1.6rem}
-        .stack{display:inline-flex;flex-direction:column;align-items:center;margin:0 3px;vertical-align:bottom}
-        .stack-pinyin{font-size:0.95rem;line-height:1rem;margin-bottom:0.25rem}
-        .stack-hanzi{font-size:1.55rem;line-height:1.25rem}
+        .stack {
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          vertical-align: middle;
+          line-height: normal;
+          overflow: visible;
+          padding-bottom: 4px; /* garante espaço extra no render */
+          margin: 0 3px;
+        }
+        
+        .stack-pinyin {
+          font-size: 0.95rem;
+          line-height: 1.1rem;
+          margin-bottom: 0.35rem; /* mais respiro entre pinyin e hanzi */
+        }
+        
+        .stack-hanzi {
+          font-size: 1.55rem;
+          line-height: 1.35rem;
+          margin-top: 0;
+        }
+
         .fontpicker{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
         .fontpicker span{font-weight:600;font-size:0.9rem;margin-right:4px}
         .chip{background:#f7f7f7;color:#222;border:1px solid #ddd;border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;transition:all .2s;font-size:0.9rem}

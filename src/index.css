@@ -343,6 +343,10 @@
 }
 
 @layer utilities {
+  .visible {
+    visibility: visible;
+  }
+
   .sticky {
     position: sticky;
   }
@@ -530,6 +534,40 @@ html {
 .dark .btn-sec:hover {
   background: var(--color-primary);
   color: var(--color-primary-foreground);
+}
+
+.out span {
+  overflow: visible;
+}
+
+.stack {
+  vertical-align: middle;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 3px;
+  padding-bottom: 6px;
+  line-height: normal;
+  display: inline-flex;
+  overflow: visible;
+}
+
+.stack-pinyin {
+  margin-bottom: .35rem;
+  font-size: .95rem;
+  line-height: 1.1rem;
+}
+
+.stack-hanzi {
+  font-size: 1.55rem;
+  line-height: 1.35rem;
+  display: inline-block;
+  overflow: visible;
+  transform: translateY(.5px);
+}
+
+.out {
+  padding-bottom: 6px;
 }
 
 @property --tw-border-style {
