@@ -2,110 +2,61 @@
 
 Uma ferramenta gratuita para colorir caracteres Pinyin e Hanzi por tons, facilitando o aprendizado de chinês.
 
-## 🚀 Deploy no GitHub Pages (Método Simples)
+## 🚀 Deploy no Vercel (Recomendado)
 
-### ✅ Pré-requisitos
-- Conta no GitHub
-- Git instalado no computador
-- Node.js instalado
+### ⚡ Método Rápido (2 minutos)
 
----
+1. **Criar repositório no GitHub:** https://github.com/new
+   - Nome: `color2hanzi`
+   - Público
 
-## 📦 Passo a Passo Completo
+2. **Subir código:**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/SEU_USUARIO/color2hanzi.git
+   git push -u origin main
+   ```
 
-### 1️⃣ Criar Repositório no GitHub
+3. **Deploy no Vercel:**
+   - Acesse: https://vercel.com/new
+   - Import Git Repository
+   - Selecione `color2hanzi`
+   - Deploy! 🚀
 
-1. Acesse https://github.com/new
-2. **Nome do repositório**: `color2hanzi` (ou o nome que preferir)
-3. Deixe como **Public**
-4. **NÃO** marque "Initialize with README"
-5. Clique em **Create repository**
+4. **Site no ar em:** `https://color2hanzi.vercel.app`
 
-### 2️⃣ Subir o Código para o GitHub
-
-Abra o terminal/prompt na pasta do projeto e execute:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit - Color2Hanzi"
-git branch -M main
-git remote add origin https://github.com/SEU_USUARIO/color2hanzi.git
-git push -u origin main
-```
-
-⚠️ **IMPORTANTE**: Substitua `SEU_USUARIO` pelo seu nome de usuário do GitHub!
-
-### 3️⃣ Instalar Dependências
-
-```bash
-npm install
-```
-
-### 4️⃣ Fazer Deploy
-
-```bash
-npm run deploy
-```
-
-Este comando vai:
-- Criar uma versão otimizada do site
-- Criar uma branch `gh-pages` automaticamente
-- Fazer o upload para o GitHub
-
-### 5️⃣ Ativar GitHub Pages
-
-1. Vá para o repositório no GitHub
-2. Clique em **Settings** (Configurações)
-3. No menu lateral esquerdo, clique em **Pages**
-4. Em **Branch**, selecione `gh-pages` → **/(root)** → **Save**
-
-### 6️⃣ Acessar o Site
-
-Após 1-2 minutos, seu site estará disponível em:
-
-```
-https://SEU_USUARIO.github.io/color2hanzi/
-```
+📖 **Guia completo:** Veja [VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md)
 
 ---
 
-## 🔧 Configurações Importantes
+## 🌐 Domínio Personalizado
 
-### Se o nome do repositório for diferente de `color2hanzi`
+### Vercel (Recomendado)
 
-Edite o arquivo `vite.config.ts` na linha 7:
-
-```typescript
-base: '/SEU_NOME_DO_REPOSITORIO/',
-```
-
-### Para usar domínio personalizado (color2hanzi.com)
-
-1. Compre um domínio
-2. No GitHub Pages Settings, adicione o domínio customizado
-3. Configure DNS no registrador:
-   - **Tipo A** para:
-     - 185.199.108.153
-     - 185.199.109.153
-     - 185.199.110.153
-     - 185.199.111.153
-   - **OU tipo CNAME** para: `SEU_USUARIO.github.io`
-
-4. Mude o `vite.config.ts`:
-```typescript
-base: '/', // Para domínio customizado
-```
+No painel da Vercel:
+- **Settings** → **Domains** → **Add**
+- Digite: `color2hanzi.com`
+- Configure DNS no registrador:
+  ```
+  CNAME: www → cname.vercel-dns.com
+  A: @ → 76.76.21.21
+  ```
+- HTTPS configurado automaticamente! ✅
 
 ---
 
-## 🔄 Atualizar o Site (Após Mudanças)
+## 🔄 Deploy Contínuo (Automático)
+
+Com Vercel + GitHub conectados:
 
 ```bash
 git add .
-git commit -m "Descrição das mudanças"
+git commit -m "descrição das mudanças"
 git push
-npm run deploy
+# Vercel faz deploy automaticamente! 🚀
 ```
 
 ---

@@ -1,7 +1,7 @@
-﻿# ======================================================================
+﻿# ====================================================================== 
 #  Script de Deploy Automático - Projeto Color2Hanzi
 #  Autor: Erik Vieira de Melo
-#  Função: Atualizar build, commit, push e deploy no Netlify automaticamente
+#  Função: Atualizar build, commit, push e deploy no Vercel automaticamente
 # ======================================================================
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -33,10 +33,10 @@ git commit -m "$commitMessage"
 Write-Host "`nEnviando para GitHub..."
 git push
 
-# 7. Deploy manual no Netlify (opcional)
-Write-Host "`nPublicando site no Netlify..."
-netlify deploy --prod
+# 7. Deploy na Vercel (produção)
+Write-Host "`nPublicando site na Vercel..."
+vercel --prod
 
 # 8. Conclusão
 Write-Host "`nDeploy concluído com sucesso!" -ForegroundColor Green
-Write-Host "Acesse: https://color2hanzi.netlify.app" -ForegroundColor Yellow
+Write-Host "Acesse: https://color2hanzi.vercel.app" -ForegroundColor Yellow

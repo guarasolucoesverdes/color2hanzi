@@ -1,25 +1,8 @@
-# ⚡ Quick Start - Color2Hanzi no Netlify
+# ⚡ Quick Start - Color2Hanzi no Vercel
 
-## 🚀 Método Mais Rápido (5 minutos)
+## 🚀 Método Mais Rápido (2 minutos)
 
-### 1. Fazer Build
-
-```bash
-npm install
-npm run build
-```
-
-### 2. Deploy no Netlify
-
-Arraste a pasta `dist/` para: https://app.netlify.com/drop
-
-**Pronto! Site no ar!** 🎉
-
----
-
-## 📋 Ou siga o Passo a Passo Completo
-
-### Opção A: GitHub + Netlify (Deploy Automático)
+### Opção 1: GitHub + Vercel (Recomendado)
 
 ```bash
 # 1. Criar repo no GitHub: https://github.com/new
@@ -32,43 +15,53 @@ git branch -M main
 git remote add origin https://github.com/SEU_USUARIO/color2hanzi.git
 git push -u origin main
 
-# 3. No Netlify:
-# - Import from GitHub
-# - Escolher repo 'color2hanzi'
+# 3. Deploy na Vercel: https://vercel.com/new
+# - Import Git Repository
+# - Selecione 'color2hanzi'
 # - Deploy!
 ```
 
-### Opção B: Upload Manual
+**Site no ar em:** `https://color2hanzi.vercel.app` 🎉
+
+---
+
+### Opção 2: Vercel CLI (Sem GitHub)
 
 ```bash
-npm install
-npm run build
-# Arraste pasta 'dist/' no Netlify
+# Instalar Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+
+# Deploy para produção
+vercel --prod
 ```
 
 ---
 
 ## 📁 Arquivos Importantes
 
-✅ `netlify.toml` - Config de build  
-✅ `public/_redirects` - SPA routing  
+✅ `vercel.json` - Config de build e rewrites  
+✅ `.vercelignore` - Arquivos ignorados no deploy  
 ✅ `vite.config.ts` - Base path `/`
 
 ---
 
 ## 🌐 URLs
 
-**Temporária**: `https://random-name.netlify.app`  
-**Customizada**: Settings → Domain → Change site name
+**Preview**: `https://color2hanzi-git-main-usuario.vercel.app`  
+**Produção**: `https://color2hanzi.vercel.app`  
+**Custom**: Settings → Domains → Add
 
 ---
 
 ## 📚 Guias Completos
 
-- **NETLIFY_DEPLOY.md** - Deploy detalhado  
+- **VERCEL_DEPLOY.md** - Deploy detalhado  
 - **EXPORT_GUIDE.md** - Como exportar e GitHub  
 - **README.md** - Documentação completa
 
 ---
 
-**Qualquer dúvida, veja os guias acima! 🚀**
+**Deploy feito com ❤️ na Vercel! 🚀**

@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/', // Base path para Netlify
+  base: '/', // Base path para Vercel
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
