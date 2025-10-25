@@ -27,7 +27,7 @@ export default function App() {
   const [outStack, setOutStack] = useState('');
   const [warn, setWarn] = useState('');
   const [font, setFont] = useState(0);
-  const [mono, setMono] = useState(false);
+
   const [colorPin, setColorPin] = useState(true);
   const [colorHan, setColorHan] = useState(true);
   
@@ -139,7 +139,7 @@ export default function App() {
         const p = esc(seg[i]?.syll || '');
         const h = esc(c);
         const pinHTML = colorPin ? `<span class="tone${t} stack-pinyin">${p}</span>` : `<span class="stack-pinyin">${p}</span>`;
-        const hanHTML = colorHan ? `<span class="tone${t} stack-hanzi">${h}</span>` : `<span class="stack-hanzi">${h}</span>`;
+        const hanHTML = colorHan   ? `<span class="tone${t} stack-hanzi" style="font-family:${fonts[font]}">${h}</span>`   : `<span class="stack-hanzi" style="font-family:${fonts[font]}">${h}</span>`;
         out += `<span class="stack">${pinHTML}${hanHTML}</span>`;
         i++;
       } else out += esc(c);
@@ -300,7 +300,7 @@ export default function App() {
         .tone1{color:var(--t1)}.tone2{color:var(--t2)}.tone3{color:var(--t3)}.tone4{color:var(--t4)}.tone5{color:var(--t5)}
         h1{font-size:1.35rem;margin:0 0 12px;font-weight:600}
         .title{font-size:2.2rem;font-weight:700;margin:0 0 24px;text-align:center;letter-spacing:0}
-        textarea{width:100%;min-height:120px;padding:12px;border-radius:10px;border:1px solid #ccc;font-size:1rem;resize:vertical;font-family:${mono ? 'monospace' : 'inherit'};white-space:pre-wrap}
+        textarea{width:100%;min-height:120px;padding:12px;border-radius:10px;border:1px solid #ccc;font-size:1rem;resize:vertical;font-family:'Noto Sans','Roboto','Open Sans',sans-serif;white-space:pre-wrap}
         textarea::placeholder{color:#999}
         .btn{display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border-radius:8px;border:0;background:#111;color:#fff;font-weight:600;cursor:pointer;font-size:1rem;transition:background .2s}
         .btn:hover{background:#000}
@@ -338,6 +338,11 @@ export default function App() {
           line-height: 1.35rem;
           margin-top: 0;
         }
+        .stack-pinyin {
+          font-family:'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
+          letter-spacing:0.3px;
+        }
+
 
         .fontpicker{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
         .fontpicker span{font-weight:600;font-size:0.9rem;margin-right:4px}
@@ -363,12 +368,7 @@ export default function App() {
 
       <main className="container">
         {/* Toggle */}
-        <div className="toggle">
-          <label>
-            <input type="checkbox" checked={mono} onChange={e => setMono(e.target.checked)} />
-            Monospace mode
-          </label>
-        </div>
+
 
         {/* Title */}
         <h1 className="title">
