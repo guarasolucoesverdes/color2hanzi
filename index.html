@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,19 +23,79 @@
     <meta name="twitter:description" content="Make Mandarin tone learning visual and intuitive with Color2Hanzi." />
     <meta name="twitter:image" content="https://color2hanzi.com/assets/preview.png" />
 
-    <!-- Google AdSense -->
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9753698333518224"
-      crossorigin="anonymous">
-    </script>
-
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   </head>
 
   <body>
     <div id="root"></div>
+
+    <!-- Script de Aviso de Cookies do AdSense -->
+    <script>
+      (function() {
+        const consent = localStorage.getItem('cookieConsent');
+
+        if (consent === 'accepted') {
+          carregarAdsense();
+        } else if (consent !== 'denied') {
+          const banner = document.createElement('div');
+          banner.id = 'cookie-banner';
+          banner.innerHTML = `
+            <p>Este site utiliza cookies do Google AdSense para personalizar anúncios e analisar o tráfego.
+            <a href="/sua-politica-de-privacidade.html" target="_blank">Saiba mais</a></p>
+            <button id="btn-aceitar-cookies">Aceitar</button>
+            <button id="btn-recusar-cookies">Recusar</button>
+          `;
+
+          banner.style.position = 'fixed';
+          banner.style.bottom = '0';
+          banner.style.left = '0';
+          banner.style.width = '100%';
+          banner.style.background = 'rgba(0, 0, 0, 0.85)';
+          banner.style.color = '#fff';
+          banner.style.padding = '15px';
+          banner.style.textAlign = 'center';
+          banner.style.zIndex = '10000';
+          banner.style.fontSize = '0.9rem';
+          banner.style.lineHeight = '1.4';
+          banner.querySelectorAll('button').forEach(btn => {
+            btn.style.margin = '0 8px';
+            btn.style.padding = '6px 12px';
+            btn.style.border = 'none';
+            btn.style.borderRadius = '4px';
+            btn.style.cursor = 'pointer';
+          });
+          banner.querySelector('#btn-aceitar-cookies').style.background = '#4CAF50';
+          banner.querySelector('#btn-recusar-cookies').style.background = '#f44336';
+          document.body.appendChild(banner);
+
+          document.getElementById('btn-aceitar-cookies').onclick = function() {
+            localStorage.setItem('cookieConsent', 'accepted');
+            removerBanner();
+            carregarAdsense();
+          };
+          document.getElementById('btn-recusar-cookies').onclick = function() {
+            localStorage.setItem('cookieConsent', 'denied');
+            removerBanner();
+          };
+        }
+
+        function removerBanner() {
+          const banner = document.getElementById('cookie-banner');
+          if (banner) banner.remove();
+        }
+
+        function carregarAdsense() {
+          const adsScript = document.createElement('script');
+          adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9753698333518224";
+          adsScript.async = true;
+          adsScript.setAttribute('crossorigin', 'anonymous');
+          document.head.appendChild(adsScript);
+        }
+      })();
+    </script>
+
+    <!-- Script principal do app -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
