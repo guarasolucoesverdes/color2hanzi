@@ -217,7 +217,7 @@ export default function App() {
         const p = esc(applyTone(seg[i]?.syll || '', t));
         const h = esc(c);
         const pinHTML = colorPin ? `<span class="tone${t} stack-pinyin">${p}</span>` : `<span class="stack-pinyin">${p}</span>`;
-        const hanHTML = colorHan   ? `<span class="tone${t} stack-hanzi hanzi-font">${h}</span>`   : `<span class="stack-hanzi hanzi-font">${h}</span>`;
+        const hanHTML = colorHan ? `<span class="tone${t} stack-hanzi hanzi-font">${h}</span>` : `<span class="stack-hanzi hanzi-font">${h}</span>`;
         out += `<span class="stack">${pinHTML}${hanHTML}</span>`;
         i++;
       } else out += esc(c);
