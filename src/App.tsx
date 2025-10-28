@@ -422,10 +422,6 @@ export default function App() {
         .hanzi-font { font-family: var(--hanzi-font) !important; }
       `}</style>
 
-      {/* Top Ad */}
-      <div className="ad-top">
-        <AdSlot width={728} height={90} slot="top" />
-      </div>
 
       <main className="container">
         {/* Title */}
@@ -566,10 +562,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* Mid Ad */}
-            <div style={{margin:'32px 0'}}>
-              <AdSlot width={728} height={90} slot="mid" />
-            </div>
+
 
             {/* Tips */}
             <section aria-labelledby="tips-h">
@@ -596,26 +589,11 @@ export default function App() {
             </section>
           </div>
 
-          {/* Sidebar */}
-          <aside className="sidebar" style={{display:'none'}} aria-label="Advertisements">
-            <div style={{position:'sticky',top:'24px'}}>
-              <AdSlot width={300} height={600} slot="sidebar-1" />
-              <div style={{marginTop:'24px'}}>
-                <AdSlot width={300} height={250} slot="sidebar-2" />
-              </div>
-            </div>
           </aside>
         </div>
 
-        {/* Bottom Ad */}
-        <div style={{marginTop:'32px'}}>
-          <AdSlot width={728} height={90} slot="bottom" />
-        </div>
 
-        {/* Mobile Ad */}
-        <div style={{marginTop:'24px',display:'block'}} className="mobile-ad">
-          <AdSlot width={300} height={250} slot="mobile" />
-        </div>
+
 
         {/* Footer */}
         <footer style={{marginTop:'48px',padding:'24px 0',borderTop:'1px solid #e5e5e5',textAlign:'center',fontSize:'0.85rem',color:'#666'}}>
