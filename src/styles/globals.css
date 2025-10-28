@@ -133,49 +133,47 @@
   transition: font-family 0.2s ease;
 }
 
-/* Estrutura do bloco de saída */
+/* Container dos resultados */
 .out {
   display: inline-block !important;
   white-space: pre-wrap !important;
+  vertical-align: middle !important;
   line-height: 1.2 !important;
   padding: 4px 8px !important;
   margin: 0 !important;
-  vertical-align: middle !important;
+  background: transparent !important;
 }
 
-/* Empilhamento Pinyin + Hanzi (vertical) */
+/* Cada par pinyin+hanzi */
 .out .stack {
-  display: inline-flex;
-  flex-direction: column;      /* pinyin em cima, hanzi embaixo */
-  align-items: center;
-  justify-content: center;
-  margin: 0 4px;
-  padding: 0;
-  line-height: 1.2;
-  vertical-align: middle;
+  display: inline-flex !important;
+  flex-direction: column !important;   /* empilha verticalmente */
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  margin: 0 3px !important;
+  vertical-align: bottom !important;
 }
 
+/* Pinyin acima */
 .out .stack-pinyin {
-  font-size: 0.85rem;
-  line-height: 1rem;
-  margin-bottom: 0.1rem;       /* espaço entre pinyin e hanzi */
-  text-align: center;
+  font-size: 0.9rem !important;
+  line-height: 1rem !important;
+  margin-bottom: 0.1rem !important;
+  text-align: center !important;
   font-family: 'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
-  position: relative;
-  z-index: 1;
 }
 
+/* Hanzi abaixo */
 .out .stack-hanzi {
-  font-size: 1.8rem;
-  line-height: 1.4rem;
-  text-align: center;
-  position: relative;
-  z-index: 0;
+  font-size: 1.6rem !important;
+  line-height: 1.25rem !important;
+  text-align: center !important;
   font-family: var(--hanzi-font) !important;
 }
 
+/* Cores neutras para símbolos que não recebem tom */
+.out span:not([class*="tone"]) { color: var(--t5) !important; }
 
-/* Tom 5 explícito */
-.tone5 {
-  color: var(--t5) !important;
 }
