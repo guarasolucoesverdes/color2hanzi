@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, memo, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 interface Seg { syll: string; tone: number; sep: string; }
 
@@ -11,7 +11,6 @@ export default function App() {
   const [warn, setWarn] = useState('');
   const [font, setFont] = useState(0);
 
-  // Ativos por padrão
   const [colorPin, setColorPin] = useState(true);
   const [colorHan, setColorHan] = useState(true);
   
@@ -27,7 +26,6 @@ export default function App() {
     1: /[āēīōūǖ]/i, 2: /[áéíóúǘ]/i, 3: /[ǎěǐǒǔǚ]/i, 4: /[àèìòùǜ]/i
   };
 
-  // ---- helpers de pinyin: normalize + aplicar acento por regra oficial ----
   const normalize = useCallback((p: string) => {
     const m: Record<string, string> = {
       'ā':'a','á':'a','ǎ':'a','à':'a','ē':'e','é':'e','ě':'e','è':'e',
@@ -43,12 +41,11 @@ export default function App() {
     'i': ['ī','í','ǐ','ì'],
     'o': ['ō','ó','ǒ','ò'],
     'u': ['ū','ú','ǔ','ù'],
-    'v': ['ǖ','ǘ','ǚ','ǜ'], // v = ü
+    'v': ['ǖ','ǘ','ǚ','ǜ'],
     'ü': ['ǖ','ǘ','ǚ','ǜ'],
   };
 
   const isLetter = useCallback((c: string) => /[A-Za-zāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]/.test(c), []);
-  
   const getTone = useCallback((t: string): number => {
     for (let i = 1; i <= 4; i++) if (toneMap[i].test(t)) return i;
     const m = t.match(/([1-5])$/);
@@ -58,85 +55,44 @@ export default function App() {
   const esc = useCallback((s: string) => 
     s.replace(/[&<>"']/g, m => ({'&':'&','<':'<','>':'>','"':'&quot;',"'":'&#39;'}[m]||m)), []);
 
-  // Aplica diacrítico correto a uma sílaba base + tom (1–4); tom 5 retorna sem acento.
   const applyTone = useCallback((syllBase: string, tone: number): string => {
-    if (tone === 5 || tone === 0) {
-      return syllBase.replace(/v/g, 'ü');
-    }
-    // Remover qualquer acento prévio para evitar "dois acentos"
+    if (tone === 5 || tone === 0) return syllBase.replace(/v/g, 'ü');
     const lower = normalize(syllBase).toLowerCase();
-
-    // regra de escolha do núcleo:
-    // 1) se houver 'a' ou 'e' → acente esse
-    // 2) se houver 'ou' → acente o 'o'
-    // 3) caso contrário, acente a ÚLTIMA vogal (entre i o u v/ü)
-    const vowels = Array.from(lower).map((ch, idx) => ({ ch, idx }))
-      .filter(o => 'aeiouv'.includes(o.ch));
-
+    const vowels = Array.from(lower).map((ch, idx) => ({ ch, idx })).filter(o => 'aeiouv'.includes(o.ch));
     if (vowels.length === 0) return syllBase.replace(/v/g, 'ü');
-
-    let targetIndex = -1;
-
-    if (lower.includes('a')) {
-      targetIndex = lower.indexOf('a');
-    } else if (lower.includes('e')) {
-      targetIndex = lower.indexOf('e');
-    } else if (lower.includes('ou')) {
-      targetIndex = lower.indexOf('o');
-    } else {
-      for (let i = vowels.length - 1; i >= 0; i--) {
-        const c = vowels[i].ch;
-        if ('aeiouv'.includes(c)) {
-          targetIndex = vowels[i].idx;
-          break;
-        }
-      }
-    }
-
-    if (targetIndex < 0) return syllBase.replace(/v/g, 'ü');
-
+    let targetIndex = lower.includes('a') ? lower.indexOf('a')
+      : lower.includes('e') ? lower.indexOf('e')
+      : lower.includes('ou') ? lower.indexOf('o')
+      : vowels[vowels.length - 1].idx;
     const chars = Array.from(lower);
     const v = chars[targetIndex];
-
-    const table = accentMap[v] || null;
+    const table = accentMap[v];
     if (!table) return syllBase.replace(/v/g, 'ü');
-
-    const mark = table[tone - 1] || v;
-    chars[targetIndex] = mark;
-
+    chars[targetIndex] = table[tone - 1] || v;
     const out = chars.join('').replace(/v/g, 'ü');
-
-    // manter capitalização inicial se a sílaba original tinha inicial maiúscula
-    if (/^[A-Z]/.test(syllBase)) {
-      return out.charAt(0).toUpperCase() + out.slice(1);
-    }
+    if (/^[A-Z]/.test(syllBase)) return out.charAt(0).toUpperCase() + out.slice(1);
     return out;
   }, [normalize]);
 
-  // Segmenta o texto de pinyin (com número ou acento) em sílabas reconhecidas
   const segment = useCallback((text: string): Seg[] => {
     const res: Seg[] = [];
     let i = 0, N = text.length;
-    
     while (i < N) {
       if (!isLetter(text[i])) {
         if (res.length) res[res.length - 1].sep += text[i];
         i++;
         continue;
       }
-      
       let k = i;
       while (k < N && (isLetter(text[k]) || /[1-5]/.test(text[k]))) k++;
       const chunk = text.slice(i, k);
       let h = 0;
-      
       while (h < chunk.length) {
         if (!isLetter(chunk[h])) {
           if (res.length) res[res.length - 1].sep += chunk[h];
           h++;
           continue;
         }
-        
         let matched: { raw: string; base: string } | null = null;
         for (let end = Math.min(chunk.length, h + 7); end > h; end--) {
           const cand = chunk.slice(h, end);
@@ -147,19 +103,15 @@ export default function App() {
             break;
           }
         }
-        
         if (!matched) {
           if (res.length) res[res.length - 1].sep += chunk[h];
           h++;
           continue;
         }
-
-        // Guardamos a sílaba BASE sem acento (normalizada) para evitar duplo acento
         const tone = getTone(matched.raw);
         res.push({ syll: normalize(matched.base), tone, sep: '' });
         h += matched.raw.length;
       }
-      
       i = k;
       while (i < N && !isLetter(text[i])) {
         if (res.length) res[res.length - 1].sep += text[i];
@@ -169,14 +121,8 @@ export default function App() {
     return res;
   }, [isLetter, normalize, getTone, syllables]);
 
-  // --- Renderizadores (sempre com acento visual na saída) ---
   const renderPin = useCallback((seg: Seg[]) =>
-    seg
-      .map(s => {
-        const accented = applyTone(s.syll, s.tone);
-        return `<span class="tone${s.tone}">${esc(accented)}</span>${esc(s.sep)}`;
-      })
-      .join(''),
+    seg.map(s => `<span class="tone${s.tone}">${esc(applyTone(s.syll, s.tone))}</span>${esc(s.sep)}`).join(''),
     [esc, applyTone]
   );
 
@@ -200,7 +146,7 @@ export default function App() {
         const p = esc(applyTone(seg[i]?.syll || '', t));
         const h = esc(c);
         const pinHTML = colorPin ? `<span class="tone${t} stack-pinyin">${p}</span>` : `<span class="stack-pinyin">${p}</span>`;
-        const hanHTML = colorHan   ? `<span class="tone${t} stack-hanzi hanzi-font">${h}</span>`   : `<span class="stack-hanzi hanzi-font">${h}</span>`;
+        const hanHTML = colorHan ? `<span class="tone${t} stack-hanzi hanzi-font">${h}</span>` : `<span className="stack-hanzi hanzi-font">${h}</span>`;
         out += `<span class="stack">${pinHTML}${hanHTML}</span>`;
         i++;
       } else out += esc(c);
@@ -208,7 +154,6 @@ export default function App() {
     return out;
   }, [esc, colorPin, colorHan, applyTone]);
 
-  // Processar **somente** ao clicar em Generate
   const process = useCallback(() => {
     const seg = segment(pin);
     const tones = seg.map(s => s.tone);
@@ -231,77 +176,6 @@ export default function App() {
     alert('✅ Copied!');
   }, []);
 
-  const saveImg = useCallback(async (ref: React.RefObject<HTMLDivElement>, name: string) => {
-    if (!ref.current || typeof window === 'undefined') return;
-    const el = ref.current;
-    el.style.display = 'inline-block';
-    el.style.padding = '8px 8px 12px 8px';
-    el.style.borderBottom = '4px solid transparent';
-  
-    // @ts-ignore - html2canvas loaded via CDN
-    if (!window.html2canvas) {
-      alert('Screenshot library not loaded');
-      return;
-    }
-  
-    try {
-      await new Promise(r => setTimeout(r, 120));
-      // @ts-ignore
-      const canvas = await window.html2canvas(el, { backgroundColor: null, scale: 3, useCORS: true });
-      const link = document.createElement('a');
-      link.download = `${name}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-  
-      el.style.borderBottom = '';
-      el.style.padding = '4px 8px';
-      alert('✅ Image saved!');
-    } catch (e) {
-      alert('❌ Could not save image');
-    }
-  }, []);
-
-  const copyImg = useCallback(async (ref: React.RefObject<HTMLDivElement>) => {
-    if (!ref.current || typeof window === 'undefined') return;
-    const el = ref.current;
-    el.style.display = 'inline-block';
-    el.style.padding = '8px 8px 12px 8px';
-    el.style.borderBottom = '4px solid transparent';
-  
-    // @ts-ignore
-    if (!window.html2canvas) {
-      alert('Screenshot library not loaded');
-      return;
-    }
-  
-    try {
-      await new Promise(r => setTimeout(r, 120));
-      // @ts-ignore
-      const canvas = await window.html2canvas(el, { backgroundColor: null, scale: 3, useCORS: true });
-      el.style.borderBottom = '';
-      el.style.padding = '4px 8px';
-  
-      canvas.toBlob(async (blob: Blob | null) => {
-        if (!blob) {
-          alert('❌ Unable to create image');
-          return;
-        }
-        try {
-          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-          alert('✅ Image copied to clipboard!');
-        } catch {
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = 'color2hanzi.png';
-          link.click();
-          alert('⚠️ Clipboard not supported — image downloaded instead');
-        }
-      });
-    } catch (e) {
-      alert('❌ Could not copy image');
-    }
-  }, []);
-
   const useExample = useCallback(() => {
     setPin('Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!\nMei3tian1 yi1 dian3dian3!');
     setHan('把这个网站分享给也想用颜色学声调的朋友吧!\n每天一点点');
@@ -317,22 +191,12 @@ export default function App() {
     setWarn('');
   }, []);
 
-  const copyLink = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText('https://color2hanzi.com');
-      alert('✅ Link copied: https://color2hanzi.com');
-    } catch {
-      alert('⚠️ Could not copy link automatically');
-    }
-  }, []);
-
   const fonts = [
     "'Ma Shan Zheng','Noto Serif SC','Noto Serif Simplified Chinese',serif",
     "'Noto Serif SC','Noto Serif Simplified Chinese',serif",
     "'ZCOOL XiaoWei','Noto Serif SC','Noto Serif Simplified Chinese',serif"
   ];
 
-  // Load html2canvas script
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const script = document.createElement('script');
@@ -341,15 +205,13 @@ export default function App() {
     document.head.appendChild(script);
   }, []);
 
-  // Atualiza apenas a variável de fonte; não processa automaticamente
   useEffect(() => {
     document.documentElement.style.setProperty('--hanzi-font', fonts[font]);
   }, [font]);
 
   return (
     <>
-      <title>Color2Hanzi - Colorize Pinyin & Hanzi by Tones | Free Chinese Learning Tool</title>
-      
+      <title>Color2Hanzi - Colorize Pinyin & Hanzi by Tones</title>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap');
         :root{--t1:#FF4B4B;--t2:#FF9F1C;--t3:#2ECC71;--t4:#3498DB;--t5:#777}
@@ -364,8 +226,7 @@ export default function App() {
         .btn{display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border-radius:8px;border:0;background:#111;color:#fff;font-weight:600;cursor:pointer;font-size:1rem;transition:background .2s}
         .btn:hover{background:#000}
         .btn-lg{font-size:1.2rem;padding:14px 32px;background:linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);background-size:300% 100%;box-shadow:0 4px 10px rgba(0,0,0,0.1);transition:all 0.4s ease;border-radius:10px}
-        .btn-lg:hover{background-position:right center;transform:scale(1.03);background:linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);background-size:300% 100%}
-        .btn-lg:active{transform:scale(0.97)}
+        .btn-lg:hover{background-position:right center;transform:scale(1.03)}
         .btn-sec{background:#f2f2f2;color:#111;font-size:0.9rem;padding:6px 12px}
         .btn-sec:hover{background:#e5e5e5}
         .small{font-size:0.9rem;color:#555;margin-top:8px}
@@ -374,41 +235,22 @@ export default function App() {
         .block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600;gap:8px;flex-wrap:wrap}
         .out{font-size:1.15rem;line-height:1.9rem;white-space:pre-wrap;display:inline-block;overflow:visible;padding:4px 8px;margin:0;background:transparent}
         #outHan{font-size:1.6rem}
-        .out {
-          font-size: 1.15rem;
-          line-height: 2.6rem; /* garante espaçamento entre linhas */
-          white-space: pre-wrap;
-          display: block;
-          overflow: visible;
-          padding: 4px 8px;
-          margin: 0;
-          background: transparent;
-          vertical-align: top;
-          text-align: left;
-        }
         .fontpicker{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
         .fontpicker span{font-weight:600;font-size:0.9rem;margin-right:4px}
         .chip{background:#f7f7f7;color:#222;border:1px solid #ddd;border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;transition:all .2s;font-size:0.9rem}
         .chip:hover{background:#eee}
         .chip.active{background:#111;color:#fff;border-color:#111}
-        .toggle{position:absolute;top:16px;right:24px;display:flex;align-items:center;gap:8px;font-size:0.9rem}
-        .toggle input{cursor:pointer}
-        .btn-group{display:flex;gap:8px;flex-wrap:wrap}
         .options{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;font-size:0.9rem}
         .options label{display:flex;align-items:center;gap:4px;cursor:pointer}
         .options input{cursor:pointer}
         .grid{display:grid;gap:24px}
-        .ad-top{background:#f9f9f9;padding:12px 0;border-bottom:1px solid #e5e5e5;margin-bottom:16px}
         @media(min-width:1024px){.grid{grid-template-columns:1fr 320px}}
-        @media(max-width:640px){.title{font-size:1.8rem}.toggle{position:static;margin-bottom:16px}}
-        /* Hanzi font var */
+        @media(max-width:640px){.title{font-size:1.8rem}}
         :root { --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif; }
         .hanzi-font { font-family: var(--hanzi-font) !important; }
       `}</style>
 
-
       <main className="container">
-        {/* Title */}
         <h1 className="title">
           <span style={{color:'#000'}}>Color2</span>
           <span className="tone1">H</span>
@@ -420,107 +262,77 @@ export default function App() {
 
         <div className="grid">
           <div>
-            {/* Pinyin */}
-            <section aria-labelledby="pinyin-h">
-              <h1 id="pinyin-h" style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
-                Pinyin
-                <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
-                  <button className="btn-sec" onClick={useExample} aria-label="Use example text">Use Example</button>
-                  <button className="btn-sec" onClick={clear} aria-label="Clear all inputs">Clear</button>
-                </div>
-              </h1>
+            <section>
+              <h1>Pinyin</h1>
+              <div>
+                <button className="btn-sec" onClick={useExample}>Use Example</button>
+                <button className="btn-sec" onClick={clear}>Clear</button>
+              </div>
               <textarea
-                id="pin"
-                aria-label="Enter Pinyin"
-                maxLength={100000}
-                placeholder="Example:&#10;Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!&#10;Mei3tian1 yi1 dian3dian3!"
+                placeholder="Example: Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!"
                 value={pin}
                 onChange={e => setPin(e.target.value)}
               />
             </section>
 
-            {/* Hanzi */}
-            <section aria-labelledby="hanzi-h" style={{marginTop:'24px'}}>
-              <h1 id="hanzi-h">Hanzi</h1>
-              <div className="small">*The Hanzi colors will follow the same order as the Pinyin tones.</div>
+            <section style={{marginTop:'24px'}}>
+              <h1>Hanzi</h1>
               <textarea
-                id="han"
-                aria-label="Enter Hanzi characters"
-                maxLength={100000}
-                placeholder="Example:&#10;把这个网站分享给也想用颜色学声调的朋友吧!&#10;每天一点点"
+                placeholder="Example: 把这个网站分享给也想用颜色学声调的朋友吧!"
                 value={han}
                 onChange={e => setHan(e.target.value)}
-                style={{marginTop:'10px'}}
               />
             </section>
 
-            {/* Button */}
             <div style={{marginTop:'20px',textAlign:'center'}}>
               <p style={{color:'#444',fontSize:'0.95rem',marginBottom:'15px'}}>
                 Enter your text above and click below to color the tones.
               </p>
-              <button className="btn btn-lg" onClick={process} aria-label="Colorize text by tones">
-                🎨 <span style={{color:'#fff'}}>Generate</span>
-              </button>
+              <button className="btn btn-lg" onClick={process}>Generate</button>
             </div>
 
-            {/* Warning */}
-            {warn && <div className="warn" role="alert">{warn}</div>}
+            {warn && <div className="warn">{warn}</div>}
 
-            {/* Output 1: Pinyin */}
-            <section aria-labelledby="out-pin-h">
+            <section>
               <div className="block">
                 <div className="block-head">
-                  <span id="out-pin-h">Colored Pinyin</span>
-                  <div className="btn-group">
-                    <button className="btn-sec" onClick={() => copy(pinRef)}>📋 Copy</button>
-                    <button className="btn-sec" onClick={() => saveImg(pinRef, 'outPin')}>💾 Save</button>
-                    <button className="btn-sec" onClick={() => copyImg(pinRef)}>🖼️ Print</button>
+                  <span>Colored Pinyin</span>
+                  <div>
+                    <button className="btn-sec" onClick={() => copy(pinRef)}>Copy</button>
                   </div>
                 </div>
                 <div id="outPin" className="out" ref={pinRef} dangerouslySetInnerHTML={{__html:outPin}} />
               </div>
             </section>
 
-            {/* Output 2: Hanzi */}
-            <section aria-labelledby="out-han-h">
+            <section>
               <div className="block">
                 <div className="block-head">
-                  <span id="out-han-h">Colored Hanzi</span>
-                  <div className="fontpicker" role="group" aria-label="Choose Hanzi font">
+                  <span>Colored Hanzi</span>
+                  <div className="fontpicker">
                     <span>Change font:</span>
                     {[1,2,3].map(i => (
                       <button
                         key={i}
                         className={`chip ${font===i-1?'active':''}`}
                         onClick={() => setFont(i-1)}
-                        aria-label={`Font ${i}`}
-                        aria-pressed={font===i-1}
                       >
                         {i}
                       </button>
                     ))}
                   </div>
-                  <div className="btn-group">
-                    <button className="btn-sec" onClick={() => copy(hanRef)}>📋 Copy</button>
-                    <button className="btn-sec" onClick={() => saveImg(hanRef, 'outHan')}>💾 Save</button>
-                    <button className="btn-sec" onClick={() => copyImg(hanRef)}>🖼️ Print</button>
+                  <div>
+                    <button className="btn-sec" onClick={() => copy(hanRef)}>Copy</button>
                   </div>
                 </div>
-                <div 
-                  id="outHan" 
-                  className="out hanzi-font" 
-                  ref={hanRef}
-                  dangerouslySetInnerHTML={{__html:outHan}}
-                />
+                <div id="outHan" className="out hanzi-font" ref={hanRef} dangerouslySetInnerHTML={{__html:outHan}} />
               </div>
             </section>
 
-            {/* Output 3: Stacked */}
-            <section aria-labelledby="out-stack-h">
+            <section>
               <div className="block">
                 <div className="block-head">
-                  <span id="out-stack-h">Pinyin + Hanzi (Stacked)</span>
+                  <span>Pinyin + Hanzi (Stacked)</span>
                   <div className="options">
                     <label>
                       <input type="checkbox" checked={colorPin} onChange={e => setColorPin(e.target.checked)} />
@@ -531,59 +343,35 @@ export default function App() {
                       Color Hanzi
                     </label>
                   </div>
-                  <div className="btn-group">
-                    <button className="btn-sec" onClick={() => copy(stackRef)}>📋 Copy</button>
-                    <button className="btn-sec" onClick={() => saveImg(stackRef, 'outStack')}>💾 Save</button>
-                    <button className="btn-sec" onClick={() => copyImg(stackRef)}>🖼️ Print</button>
+                  <div>
+                    <button className="btn-sec" onClick={() => copy(stackRef)}>Copy</button>
                   </div>
                 </div>
-                <div 
-                  id="outStack" 
-                  className="out hanzi-font" 
-                  ref={stackRef}
-                  dangerouslySetInnerHTML={{__html:outStack}}
-                />
+                <div id="outStack" className="out hanzi-font" ref={stackRef} dangerouslySetInnerHTML={{__html:outStack}} />
               </div>
             </section>
 
-
-
-            {/* Tips */}
-            <section aria-labelledby="tips-h">
-              <h1 id="tips-h">Best Practices to Get the Most Out of Your Studies</h1>
+            <section style={{marginTop:'32px'}}>
+              <h1>Best Practices for Learning</h1>
               <div className="small" style={{lineHeight:'1.8'}}>
-                <p><span className="tone1">一</span> Write each Pinyin while trying to recall its tone — this strengthens your active memory.</p>
-                <p><span className="tone4">二</span> Compare what you remembered with your course material or previous notes.</p>
-                <p><span className="tone1">三</span> Watch out for auto-correct tools — they may change tones or simplify Pinyin incorrectly.</p>
-                <p><span className="tone4">四</span> This site is designed for learning; it doesn't correct you — it helps you observe, repeat, and improve.</p>
-                <p><span className="tone3">五</span> Hanzi characters are colored in the same order as the Pinyin tones.</p>
-                <p><span className="tone4">六</span> Read out loud. Your voice helps your brain consolidate the sound and tone of each syllable.</p>
-                <p><span className="tone1">七</span> Repeat the combinations you got wrong — but take your time; progress comes from mindful repetition.</p>
-                <p><span className="tone1">八</span> Try making a simple sentence using the words you practiced. Context helps fix learning.</p>
-                <p><span className="tone3">九</span> Review the next day, even if just for a few minutes. That's how knowledge becomes long-term memory.</p>
-                <p><span className="tone2">十</span> Add this page to your favorites for easier access during your next study session.</p>
-                <p style={{marginTop:'30px'}}>
-                  ✨ Did learning feel easier? Share this page with your friends!<br /><br />
-                  <span id="siteLink">color2hanzi.com</span>
-                  <button className="btn" onClick={copyLink} style={{marginLeft:'6px',padding:'4px 10px',fontSize:'0.9rem',borderRadius:'6px'}} aria-label="Copy website link">
-                    📋 Copy link
-                  </button>
-                </p>
+                <p><span className="tone1">一</span> Write each Pinyin while recalling its tone.</p>
+                <p><span className="tone4">二</span> Compare your recall with course materials.</p>
+                <p><span className="tone1">三</span> Avoid autocorrect tools that alter tones.</p>
+                <p><span className="tone4">四</span> This site helps you observe, repeat, and improve.</p>
+                <p><span className="tone3">五</span> Hanzi colors follow the same tone order as Pinyin.</p>
+                <p><span className="tone4">六</span> Read aloud — your voice reinforces tonal memory.</p>
+                <p><span className="tone1">七</span> Repeat difficult combinations slowly and mindfully.</p>
+                <p><span className="tone1">八</span> Make sentences — context fixes learning.</p>
+                <p><span className="tone3">九</span> Review briefly the next day for long-term retention.</p>
+                <p><span className="tone2">十</span> Bookmark this page to return easily to practice.</p>
               </div>
             </section>
+
+            <footer style={{marginTop:'48px',padding:'24px 0',borderTop:'1px solid #e5e5e5',textAlign:'center',fontSize:'0.85rem',color:'#666'}}>
+              <p>© 2025 Color2Hanzi - Free tool for Chinese language learners</p>
+            </footer>
           </div>
-
-          </aside>
         </div>
-
-
-
-
-        {/* Footer */}
-        <footer style={{marginTop:'48px',padding:'24px 0',borderTop:'1px solid #e5e5e5',textAlign:'center',fontSize:'0.85rem',color:'#666'}}>
-          <p>© 2025 Color2Hanzi - Free tool for Chinese language learners</p>
-          <p style={{marginTop:'8px'}}>Learn Chinese by colorizing Pinyin and Hanzi by tones</p>
-        </footer>
       </main>
     </>
   );
