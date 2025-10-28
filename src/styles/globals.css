@@ -1,10 +1,6 @@
 @custom-variant dark (&:is(.dark *));
 
-/* ===================================================== */
-/* BASE VARIABLES AND THEMING */
-/* ===================================================== */
 :root {
-  /* Paleta dos tons do Pinyin */
   --t1: #FF4B4B;
   --t2: #FF9F1C;
   --t3: #2ECC71;
@@ -41,14 +37,6 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
@@ -73,68 +61,8 @@
   --ring: oklch(0.439 0 0);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
 }
 
-/* ===================================================== */
-/* THEME INLINE VARIABLES */
-/* ===================================================== */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-input-background: var(--input-background);
-  --color-switch-background: var(--switch-background);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-
-/* ===================================================== */
-/* BASE LAYER */
-/* ===================================================== */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -145,9 +73,6 @@
   }
 }
 
-/* ===================================================== */
-/* Color2Hanzi Buttons */
-/* ===================================================== */
 .btn-group {
   display: flex;
   gap: 0.5rem;
@@ -161,11 +86,11 @@
   gap: 0.5rem;
   min-width: 90px;
   padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  background: var(--color-card);
-  color: var(--color-foreground);
-  font-weight: var(--font-weight-medium);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  font-weight: 500;
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -173,9 +98,9 @@
 }
 
 .btn-sec:hover {
-  background: var(--color-primary);
-  color: var(--color-primary-foreground);
-  border-color: var(--color-primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
   transform: translateY(-1px);
 }
 
@@ -184,25 +109,23 @@
   box-shadow: none;
 }
 
-/* Dark mode refinement */
 .dark .btn-sec {
-  background: var(--color-card);
-  color: var(--color-foreground);
-  border-color: var(--color-border);
+  background: var(--card);
+  color: var(--foreground);
+  border-color: var(--border);
 }
 
 .dark .btn-sec:hover {
-  background: var(--color-primary);
-  color: var(--color-primary-foreground);
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 
 /* ===================================================== */
-/* Color2Hanzi — Font & Empilhamento */
+/* FONTES E EMPILHAMENTO P/ COLOR2HANZI */
 /* ===================================================== */
 
-/* Fonta Hanzi padrão */
 :root {
-  --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif;
+  --hanzi-font: 'Noto Serif SC', 'Noto Serif Simplified Chinese', serif;
 }
 
 .hanzi-font {
@@ -210,7 +133,7 @@
   transition: font-family 0.2s ease;
 }
 
-/* Estrutura e layout dos caracteres */
+/* Estrutura do bloco de saída */
 .out {
   display: inline-block !important;
   white-space: pre-wrap !important;
@@ -218,10 +141,9 @@
   padding: 0 !important;
   margin: 0 !important;
   vertical-align: middle !important;
-  color: var(--t5);
 }
 
-/* Empilhamento pinyin + hanzi */
+/* Empilhamento Pinyin + Hanzi */
 .out .stack {
   display: inline-flex;
   flex-direction: column;
@@ -254,12 +176,12 @@
   font-family: var(--hanzi-font) !important;
 }
 
-/* Cor neutra para símbolos e sinais */
+/* Cor neutra padrão para sinais e símbolos */
 .out span:not([class*="tone"]) {
   color: var(--t5) !important;
 }
 
-/* Tom neutro */
+/* Tom 5 explícito */
 .tone5 {
   color: var(--t5) !important;
 }
