@@ -16,6 +16,7 @@ const AdSlot = memo(({ width, height, slot }: { width: number; height: number; s
 ));
 AdSlot.displayName = 'AdSlot';
 
+
 interface Seg { syll: string; tone: number; sep: string; }
 
 export default function App() {
@@ -371,7 +372,7 @@ export default function App() {
         :root{--t1:#FF4B4B;--t2:#FF9F1C;--t3:#2ECC71;--t4:#3498DB;--t5:#777}
         *{box-sizing:border-box;margin:0;padding:0}
         body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5;background:#fff;color:#222}
-        .container{max-width:1100px;margin:0 auto;padding:12px}
+        .container{max-width:800px;margin:0 auto;padding:20px}
         .tone1{color:var(--t1)}.tone2{color:var(--t2)}.tone3{color:var(--t3)}.tone4{color:var(--t4)}.tone5{color:var(--t5)}
         h1{font-size:1.35rem;margin:0 0 12px;font-weight:600}
         .title{font-size:2.2rem;font-weight:700;margin:0 0 24px;text-align:center;letter-spacing:0}
@@ -392,7 +393,7 @@ export default function App() {
         #outHan{font-size:1.6rem}
         .out {
           font-size: 1.15rem;
-          line-height: 2.6rem; /* garante espaçamento entre linhas */
+          line-height: 2.6rem;
           white-space: pre-wrap;
           display: block;
           overflow: visible;
@@ -413,22 +414,14 @@ export default function App() {
         .options{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;font-size:0.9rem}
         .options label{display:flex;align-items:center;gap:4px;cursor:pointer}
         .options input{cursor:pointer}
-        .grid{display:grid;gap:24px}
-        .ad-top{background:#f9f9f9;padding:12px 0;border-bottom:1px solid #e5e5e5;margin-bottom:16px}
-        @media(min-width:1024px){.grid{grid-template-columns:1fr 320px}}
         @media(max-width:640px){.title{font-size:1.8rem}.toggle{position:static;margin-bottom:16px}}
-        /* Hanzi font var */
         :root { --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif; }
         .hanzi-font { font-family: var(--hanzi-font) !important; }
-      `}</style>
+        `}</style>
 
-      {/* Top Ad */}
-      <div className="ad-top">
-        <AdSlot width={728} height={90} slot="top" />
-      </div>
 
       <main className="container">
-        {/* Title */}
+        
         <h1 className="title">
           <span style={{color:'#000'}}>Color2</span>
           <span className="tone1">H</span>
@@ -438,9 +431,8 @@ export default function App() {
           <span className="tone5">i</span>
         </h1>
 
-        <div className="grid">
-          <div>
-            {/* Pinyin */}
+        <div>
+      
             <section aria-labelledby="pinyin-h">
               <h1 id="pinyin-h" style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
                 Pinyin
@@ -459,7 +451,7 @@ export default function App() {
               />
             </section>
 
-            {/* Hanzi */}
+            
             <section aria-labelledby="hanzi-h" style={{marginTop:'24px'}}>
               <h1 id="hanzi-h">Hanzi</h1>
               <div className="small">*The Hanzi colors will follow the same order as the Pinyin tones.</div>
@@ -474,7 +466,7 @@ export default function App() {
               />
             </section>
 
-            {/* Button */}
+            
             <div style={{marginTop:'20px',textAlign:'center'}}>
               <p style={{color:'#444',fontSize:'0.95rem',marginBottom:'15px'}}>
                 Enter your text above and click below to color the tones.
@@ -484,10 +476,10 @@ export default function App() {
               </button>
             </div>
 
-            {/* Warning */}
+            
             {warn && <div className="warn" role="alert">{warn}</div>}
 
-            {/* Output 1: Pinyin */}
+            
             <section aria-labelledby="out-pin-h">
               <div className="block">
                 <div className="block-head">
@@ -502,7 +494,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* Output 2: Hanzi */}
+            
             <section aria-labelledby="out-han-h">
               <div className="block">
                 <div className="block-head">
@@ -536,7 +528,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* Output 3: Stacked */}
+            
             <section aria-labelledby="out-stack-h">
               <div className="block">
                 <div className="block-head">
@@ -566,12 +558,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* Mid Ad */}
-            <div style={{margin:'32px 0'}}>
-              <AdSlot width={728} height={90} slot="mid" />
-            </div>
-
-            {/* Tips */}
+            
             <section aria-labelledby="tips-h">
               <h1 id="tips-h">Best Practices to Get the Most Out of Your Studies</h1>
               <div className="small" style={{lineHeight:'1.8'}}>
@@ -594,42 +581,13 @@ export default function App() {
                 </p>
               </div>
             </section>
-          </div>
-
-          {/* Sidebar */}
-          <aside className="sidebar" style={{display:'none'}} aria-label="Advertisements">
-            <div style={{position:'sticky',top:'24px'}}>
-              <AdSlot width={300} height={600} slot="sidebar-1" />
-              <div style={{marginTop:'24px'}}>
-                <AdSlot width={300} height={250} slot="sidebar-2" />
-              </div>
-            </div>
-          </aside>
         </div>
-
-        {/* Bottom Ad */}
-        <div style={{marginTop:'32px'}}>
-          <AdSlot width={728} height={90} slot="bottom" />
-        </div>
-
-        {/* Mobile Ad */}
-        <div style={{marginTop:'24px',display:'block'}} className="mobile-ad">
-          <AdSlot width={300} height={250} slot="mobile" />
-        </div>
-
-        {/* Footer */}
         <footer style={{marginTop:'48px',padding:'24px 0',borderTop:'1px solid #e5e5e5',textAlign:'center',fontSize:'0.85rem',color:'#666'}}>
           <p>© 2025 Color2Hanzi - Free tool for Chinese language learners</p>
           <p style={{marginTop:'8px'}}>Learn Chinese by colorizing Pinyin and Hanzi by tones</p>
         </footer>
       </main>
-
-      <style>{`
-        @media(min-width:1024px){
-          .sidebar{display:block!important}
-          .mobile-ad{display:none!important}
-        }
-      `}</style>
     </>
   );
 }
+
