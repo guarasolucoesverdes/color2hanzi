@@ -355,7 +355,8 @@ export default function App() {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
     script.async = true;
-    document.head.appendChild(script);
+    document.documentElement.style.setProperty('--hanzi-font', fonts[font]);
+}, [font]);
   }, []);
 
   // Atualiza apenas a variável de fonte; não processa automaticamente
@@ -368,19 +369,6 @@ export default function App() {
       <title>Color2Hanzi - Colorize Pinyin & Hanzi by Tones | Free Chinese Learning Tool</title>
       
       <style>{`
-        .out {
-          font-size: 1.15rem;
-          line-height: 2.6rem;
-          white-space: pre-wrap;
-          display: block;
-          overflow: visible;
-          padding: 4px 8px;
-          margin: 0;
-          background: transparent;
-          vertical-align: top;
-          text-align: left;
-        }
-
         @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap');
         :root{--t1:#FF4B4B;--t2:#FF9F1C;--t3:#2ECC71;--t4:#3498DB;--t5:#777}
         *{box-sizing:border-box;margin:0;padding:0}
