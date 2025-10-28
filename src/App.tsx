@@ -1,4 +1,20 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, memo, useEffect } from 'react';
+
+// Lightweight AdSense - memoized for performance
+const AdSlot = memo(({ width, height, slot }: { width: number; height: number; slot: string }) => (
+  <div style={{ width: '100%', maxWidth: `${width}px`, height: `${height}px`, margin: '0 auto' }}>
+    <div style={{ width: '100%', height: '100%', background: '#f5f5f5', border: '1px dashed #ddd', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: '0.85rem' }}>
+      AdSense {slot} ({width}×{height})
+    </div>
+    {/* Replace with your AdSense code:
+    <ins className="adsbygoogle"
+         style={{display:'block',width:`${width}px`,height:`${height}px`}}
+         data-ad-client="ca-pub-XXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"></ins>
+    */}
+  </div>
+));
+AdSlot.displayName = 'AdSlot';
 
 interface Seg { syll: string; tone: number; sep: string; }
 
