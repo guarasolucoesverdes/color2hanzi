@@ -190,9 +190,11 @@
   transition: font-family 0.2s ease;
 }
 
-/* ==== Color2Hanzi: alinhamento preciso do empilhado ==== */
-/* === Color2Hanzi: alinhamento preciso e cor neutra para sinais === */
+/* =============================================== */
+/* Color2Hanzi — Correção de empilhamento e tons   */
+/* =============================================== */
 
+/* 1. Define layout base da saída */
 .out {
   display: inline-block !important;
   white-space: pre-wrap !important;
@@ -200,10 +202,10 @@
   padding: 0 !important;
   margin: 0 !important;
   vertical-align: middle !important;
-  color: var(--t5); /* cor padrão neutra para tudo que não é tom */
+  color: var(--t5); /* tudo que não for tom ganha o tom neutro */
 }
 
-/* Empilhamento vertical */
+/* 2. Define a estrutura do empilhamento vertical */
 .out .stack {
   display: inline-flex;
   flex-direction: column;
@@ -214,7 +216,7 @@
   vertical-align: middle;
   overflow: visible;
   line-height: 1;
-  height: 3rem;
+  height: 3rem; /* controla distância entre pinyin e hanzi */
 }
 
 .out .stack-pinyin {
@@ -235,12 +237,12 @@
   z-index: 0;
 }
 
-/* Define o tom neutro (5º tom) como cor padrão de sinais e caracteres não chineses */
+/* 3. Faz com que qualquer caractere neutro (sem tom) use a cor do 5º tom */
 .out span:not([class*="tone"]) {
   color: var(--t5) !important;
 }
 
-/* Garante que spans "tone5" e neutros mantenham o mesmo estilo */
+/* 4. Garante que tone5 também tenha o mesmo comportamento */
 .tone5 {
   color: var(--t5) !important;
 }
