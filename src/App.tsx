@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, memo, useEffect } from 'react';
+import './globals.css';
 
 // Lightweight AdSense - memoized for performance
 const AdSlot = memo(({ width, height, slot }: { width: number; height: number; slot: string }) => (
