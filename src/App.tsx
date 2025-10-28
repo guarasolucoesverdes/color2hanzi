@@ -390,19 +390,6 @@ export default function App() {
         .block{border:1px dashed #ccc;border-radius:12px;padding:12px;margin-top:14px}
         .block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600;gap:8px;flex-wrap:wrap}
         .out{font-size:1.15rem;line-height:1.9rem;white-space:pre-wrap;display:inline-block;overflow:visible;padding:4px 8px;margin:0;background:transparent}
-        #outHan{font-size:1.6rem}
-        .out {
-          font-size: 1.15rem;
-          line-height: 2.6rem;
-          white-space: pre-wrap;
-          display: block;
-          overflow: visible;
-          padding: 4px 8px;
-          margin: 0;
-          background: transparent;
-          vertical-align: top;
-          text-align: left;
-        }
         .fontpicker{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
         .fontpicker span{font-weight:600;font-size:0.9rem;margin-right:4px}
         .chip{background:#f7f7f7;color:#222;border:1px solid #ddd;border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;transition:all .2s;font-size:0.9rem}
