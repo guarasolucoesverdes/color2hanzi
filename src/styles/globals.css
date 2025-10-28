@@ -236,24 +236,36 @@
   line-height: 1.5rem;
   content: "";
 }
-.stack {
+.out .stack {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   margin: 0 2px;
+  padding: 0;
   vertical-align: middle;
+  overflow: visible;
+  line-height: 1;
+  height: 3rem;
+}
+
+.out .stack-pinyin {
+  font-size: 0.75rem;
+  line-height: 0.9rem;
+  margin-bottom: 0;
   text-align: center;
+  font-family: 'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
+  position: relative;
+  z-index: 1;
 }
 
-.stack-pinyin {
-  font-size: 0.8rem;
-  line-height: 1rem;
-  margin-bottom: 0.1rem;
+.out .stack-hanzi {
+  font-size: 1.65rem;
+  line-height: 1.2rem;
+  text-align: center;
+  position: relative;
+  z-index: 0;
 }
 
-.stack-hanzi {
-  font-size: 1.6rem;
-  line-height: 1.4rem;
-}
 
 
