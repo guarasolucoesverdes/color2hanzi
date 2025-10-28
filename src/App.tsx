@@ -219,11 +219,172 @@ export default function App() {
     document.documentElement.style.setProperty('--hanzi-font', fonts[font]);
   }, [font]);
 
+
   return (
     <>
       <title>Color2Hanzi - Colorize Pinyin & Hanzi by Tones</title>
-      {/* O restante do JSX segue igual */}
-      {/* ... */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap');
+        :root{--t1:#FF4B4B;--t2:#FF9F1C;--t3:#2ECC71;--t4:#3498DB;--t5:#777}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5;background:#fff;color:#222}
+        .container{max-width:1100px;margin:0 auto;padding:12px}
+        .tone1{color:var(--t1)}.tone2{color:var(--t2)}.tone3{color:var(--t3)}.tone4{color:var(--t4)}.tone5{color:var(--t5)}
+        h1{font-size:1.35rem;margin:0 0 12px;font-weight:600}
+        .title{font-size:2.2rem;font-weight:700;margin:0 0 24px;text-align:center;letter-spacing:0}
+        textarea{width:100%;min-height:120px;padding:12px;border-radius:10px;border:1px solid #ccc;font-size:1rem;resize:vertical;font-family:'Noto Sans','Roboto','Open Sans',sans-serif;white-space:pre-wrap}
+        textarea::placeholder{color:#999}
+        .btn{display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border-radius:8px;border:0;background:#111;color:#fff;font-weight:600;cursor:pointer;font-size:1rem;transition:background .2s}
+        .btn:hover{background:#000}
+        .btn-lg{font-size:1.2rem;padding:14px 32px;background:linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);background-size:300% 100%;box-shadow:0 4px 10px rgba(0,0,0,0.1);transition:all 0.4s ease;border-radius:10px}
+        .btn-lg:hover{background-position:right center;transform:scale(1.03)}
+        .btn-sec{background:#f2f2f2;color:#111;font-size:0.9rem;padding:6px 12px}
+        .btn-sec:hover{background:#e5e5e5}
+        .small{font-size:0.9rem;color:#555;margin-top:8px}
+        .warn{background:#fff7e6;border:1px solid #ffe1a6;padding:8px 10px;border-radius:10px;margin:8px 0;color:#8a5a00;font-size:0.9rem}
+        .block{border:1px dashed #ccc;border-radius:12px;padding:12px;margin-top:14px}
+        .block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600;gap:8px;flex-wrap:wrap}
+        .out{font-size:1.15rem;line-height:1.9rem;white-space:pre-wrap;display:inline-block;overflow:visible;padding:4px 8px;margin:0;background:transparent}
+        #outHan{font-size:1.6rem}
+        .fontpicker{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+        .fontpicker span{font-weight:600;font-size:0.9rem;margin-right:4px}
+        .chip{background:#f7f7f7;color:#222;border:1px solid #ddd;border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;transition:all .2s;font-size:0.9rem}
+        .chip:hover{background:#eee}
+        .chip.active{background:#111;color:#fff;border-color:#111}
+        .options{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;font-size:0.9rem}
+        .options label{display:flex;align-items:center;gap:4px;cursor:pointer}
+        .options input{cursor:pointer}
+        .grid{display:grid;gap:24px}
+        @media(min-width:1024px){.grid{grid-template-columns:1fr 320px}}
+        @media(max-width:640px){.title{font-size:1.8rem}}
+        :root { --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif; }
+        .hanzi-font { font-family: var(--hanzi-font) !important; }
+      `}</style>
+
+      <main className="container">
+        <h1 className="title">
+          <span style={{color:'#000'}}>Color2</span>
+          <span className="tone1">H</span>
+          <span className="tone2">a</span>
+          <span className="tone3">n</span>
+          <span className="tone4">z</span>
+          <span className="tone5">i</span>
+        </h1>
+
+        <div className="grid">
+          <div>
+            <section>
+              <h1>Pinyin</h1>
+              <div>
+                <button className="btn-sec" onClick={useExample}>Use Example</button>
+                <button className="btn-sec" onClick={clear}>Clear</button>
+              </div>
+              <textarea
+                placeholder="Example: Bǎ zhège wǎngzhàn fēnxiǎng gěi yě xiǎng yòng yánsè xué shēngdiào de péngyǒu ba!"
+                value={pin}
+                onChange={e => setPin(e.target.value)}
+              />
+            </section>
+
+            <section style={{marginTop:'24px'}}>
+              <h1>Hanzi</h1>
+              <textarea
+                placeholder="Example: 把这个网站分享给也想用颜色学声调的朋友吧!"
+                value={han}
+                onChange={e => setHan(e.target.value)}
+              />
+            </section>
+
+            <div style={{marginTop:'20px',textAlign:'center'}}>
+              <p style={{color:'#444',fontSize:'0.95rem',marginBottom:'15px'}}>
+                Enter your text above and click below to color the tones.
+              </p>
+              <button className="btn btn-lg" onClick={process}>Generate</button>
+            </div>
+
+            {warn && <div className="warn">{warn}</div>}
+
+            <section>
+              <div className="block">
+                <div className="block-head">
+                  <span>Colored Pinyin</span>
+                  <div>
+                    <button className="btn-sec" onClick={() => copy(pinRef)}>Copy</button>
+                  </div>
+                </div>
+                <div id="outPin" className="out" ref={pinRef} dangerouslySetInnerHTML={{__html:outPin}} />
+              </div>
+            </section>
+
+            <section>
+              <div className="block">
+                <div className="block-head">
+                  <span>Colored Hanzi</span>
+                  <div className="fontpicker">
+                    <span>Change font:</span>
+                    {[1,2,3].map(i => (
+                      <button
+                        key={i}
+                        className={`chip ${font===i-1?'active':''}`}
+                        onClick={() => setFont(i-1)}
+                      >
+                        {i}
+                      </button>
+                    ))}
+                  </div>
+                  <div>
+                    <button className="btn-sec" onClick={() => copy(hanRef)}>Copy</button>
+                  </div>
+                </div>
+                <div id="outHan" className="out hanzi-font" ref={hanRef} dangerouslySetInnerHTML={{__html:outHan}} />
+              </div>
+            </section>
+
+            <section>
+              <div className="block">
+                <div className="block-head">
+                  <span>Pinyin + Hanzi (Stacked)</span>
+                  <div className="options">
+                    <label>
+                      <input type="checkbox" checked={colorPin} onChange={e => setColorPin(e.target.checked)} />
+                      Color Pinyin
+                    </label>
+                    <label>
+                      <input type="checkbox" checked={colorHan} onChange={e => setColorHan(e.target.checked)} />
+                      Color Hanzi
+                    </label>
+                  </div>
+                  <div>
+                    <button className="btn-sec" onClick={() => copy(stackRef)}>Copy</button>
+                  </div>
+                </div>
+                <div id="outStack" className="out hanzi-font" ref={stackRef} dangerouslySetInnerHTML={{__html:outStack}} />
+              </div>
+            </section>
+
+            <section style={{marginTop:'32px'}}>
+              <h1>Best Practices for Learning</h1>
+              <div className="small" style={{lineHeight:'1.8'}}>
+                <p><span className="tone1">一</span> Write each Pinyin while recalling its tone.</p>
+                <p><span className="tone4">二</span> Compare your recall with course materials.</p>
+                <p><span className="tone1">三</span> Avoid autocorrect tools that alter tones.</p>
+                <p><span className="tone4">四</span> This site helps you observe, repeat, and improve.</p>
+                <p><span className="tone3">五</span> Hanzi colors follow the same tone order as Pinyin.</p>
+                <p><span className="tone4">六</span> Read aloud — your voice reinforces tonal memory.</p>
+                <p><span className="tone1">七</span> Repeat difficult combinations slowly and mindfully.</p>
+                <p><span className="tone1">八</span> Make sentences — context fixes learning.</p>
+                <p><span className="tone3">九</span> Review briefly the next day for long-term retention.</p>
+                <p><span className="tone2">十</span> Bookmark this page to return easily to practice.</p>
+              </div>
+            </section>
+
+            <footer style={{marginTop:'48px',padding:'24px 0',borderTop:'1px solid #e5e5e5',textAlign:'center',fontSize:'0.85rem',color:'#666'}}>
+              <p>© 2025 Color2Hanzi - Free tool for Chinese language learners</p>
+            </footer>
+          </div>
+        </div>
+      </main>
     </>
   );
 }
+
