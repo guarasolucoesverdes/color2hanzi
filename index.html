@@ -1,16 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color2Hanzi – Color Pinyin and Hanzi by Mandarin Tones</title>
+    <meta name="description" content="Free tool to color Mandarin Pinyin and Hanzi by tones. Make Chinese learning visual, intuitive, and effective." />
+    <meta name="keywords" content="pinyin colorizer, hanzi tones, chinese learning tool, mandarin tones, tone colorizer, learn chinese with colors" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Color2Hanzi – Learn Chinese Tones Visually" />
+    <meta property="og:description" content="Color Mandarin Pinyin and Hanzi by tone. Ideal for Chinese learners who want to see and memorize tones visually." />
+    <meta property="og:url" content="https://color2hanzi.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://color2hanzi.com/assets/preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Color2Hanzi</title>
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9753698333518224" crossorigin="anonymous"></script>
-    </head>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9753698333518224" crossorigin="anonymous"></script>
 
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+    <!-- Cookie Consent (Osano) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Cookie Consent Config -->
+    <script>
+      window.cookieconsent.initialise({
+        palette: {
+          popup: { background: "#000" },
+          button: { background: "#f1d600" }
+        },
+        theme: "classic",
+        content: {
+          message: "We use cookies to ensure the best experience and serve personalized ads.",
+          dismiss: "Got it!",
+          link: "Learn more",
+          href: "https://policies.google.com/technologies/cookies"
+        }
+      });
+    </script>
+  </body>
+</html>

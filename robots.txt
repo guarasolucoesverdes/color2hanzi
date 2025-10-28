@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://color2hanzi.com/sitemap.xml
