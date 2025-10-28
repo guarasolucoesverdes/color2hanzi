@@ -370,41 +370,238 @@ export default function App() {
       
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap');
-        :root{--t1:#FF4B4B;--t2:#FF9F1C;--t3:#2ECC71;--t4:#3498DB;--t5:#777}
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5;background:#fff;color:#222}
-        .container{max-width:800px;margin:0 auto;padding:20px}
-        .tone1{color:var(--t1)}.tone2{color:var(--t2)}.tone3{color:var(--t3)}.tone4{color:var(--t4)}.tone5{color:var(--t5)}
-        h1{font-size:1.35rem;margin:0 0 12px;font-weight:600}
-        .title{font-size:2.2rem;font-weight:700;margin:0 0 24px;text-align:center;letter-spacing:0}
-        textarea{width:100%;min-height:120px;padding:12px;border-radius:10px;border:1px solid #ccc;font-size:1rem;resize:vertical;font-family:'Noto Sans','Roboto','Open Sans',sans-serif;white-space:pre-wrap}
-        textarea::placeholder{color:#999}
-        .btn{display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border-radius:8px;border:0;background:#111;color:#fff;font-weight:600;cursor:pointer;font-size:1rem;transition:background .2s}
-        .btn:hover{background:#000}
-        .btn-lg{font-size:1.2rem;padding:14px 32px;background:linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);background-size:300% 100%;box-shadow:0 4px 10px rgba(0,0,0,0.1);transition:all 0.4s ease;border-radius:10px}
-        .btn-lg:hover{background-position:right center;transform:scale(1.03);background:linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);background-size:300% 100%}
-        .btn-lg:active{transform:scale(0.97)}
-        .btn-sec{background:#f2f2f2;color:#111;font-size:0.9rem;padding:6px 12px}
-        .btn-sec:hover{background:#e5e5e5}
-        .small{font-size:0.9rem;color:#555;margin-top:8px}
-        .warn{background:#fff7e6;border:1px solid #ffe1a6;padding:8px 10px;border-radius:10px;margin:8px 0;color:#8a5a00;font-size:0.9rem}
-        .block{border:1px dashed #ccc;border-radius:12px;padding:12px;margin-top:14px}
-        .block-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600;gap:8px;flex-wrap:wrap}
-        .fontpicker{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-        .fontpicker span{font-weight:600;font-size:0.9rem;margin-right:4px}
-        .chip{background:#f7f7f7;color:#222;border:1px solid #ddd;border-radius:999px;padding:6px 10px;font-weight:600;cursor:pointer;transition:all .2s;font-size:0.9rem}
-        .chip:hover{background:#eee}
-        .chip.active{background:#111;color:#fff;border-color:#111}
-        .toggle{position:absolute;top:16px;right:24px;display:flex;align-items:center;gap:8px;font-size:0.9rem}
-        .toggle input{cursor:pointer}
-        .btn-group{display:flex;gap:8px;flex-wrap:wrap}
-        .options{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;font-size:0.9rem}
-        .options label{display:flex;align-items:center;gap:4px;cursor:pointer}
-        .options input{cursor:pointer}
-        @media(max-width:640px){.title{font-size:1.8rem}.toggle{position:static;margin-bottom:16px}}
-        :root { --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif; }
-        .hanzi-font { font-family: var(--hanzi-font) !important; }
-    
+      
+        :root {
+          --t1:#FF4B4B;
+          --t2:#FF9F1C;
+          --t3:#2ECC71;
+          --t4:#3498DB;
+          --t5:#777;
+        }
+      
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+      
+        body {
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          line-height: 1.5;
+          background: #fff;
+          color: #222;
+        }
+      
+        .container {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+      
+        .tone1 { color: var(--t1); }
+        .tone2 { color: var(--t2); }
+        .tone3 { color: var(--t3); }
+        .tone4 { color: var(--t4); }
+        .tone5 { color: var(--t5); }
+      
+        h1 {
+          font-size: 1.35rem;
+          margin: 0 0 12px;
+          font-weight: 600;
+        }
+      
+        .title {
+          font-size: 2.2rem;
+          font-weight: 700;
+          margin: 0 0 24px;
+          text-align: center;
+          letter-spacing: 0;
+        }
+      
+        textarea {
+          width: 100%;
+          min-height: 120px;
+          padding: 12px;
+          border-radius: 10px;
+          border: 1px solid #ccc;
+          font-size: 1rem;
+          resize: vertical;
+          font-family: 'Noto Sans','Roboto','Open Sans',sans-serif;
+          white-space: pre-wrap;
+        }
+      
+        textarea::placeholder {
+          color: #999;
+        }
+      
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 8px 14px;
+          border-radius: 8px;
+          border: 0;
+          background: #111;
+          color: #fff;
+          font-weight: 600;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background .2s;
+        }
+      
+        .btn:hover {
+          background: #000;
+        }
+      
+        .btn-lg {
+          font-size: 1.2rem;
+          padding: 14px 32px;
+          background: linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);
+          background-size: 300% 100%;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          transition: all 0.4s ease;
+          border-radius: 10px;
+        }
+      
+        .btn-lg:hover {
+          background-position: right center;
+          transform: scale(1.03);
+          background: linear-gradient(90deg,#FF4B4B,#FF9F1C,#2ECC71,#3498DB,#777);
+          background-size: 300% 100%;
+        }
+      
+        .btn-lg:active {
+          transform: scale(0.97);
+        }
+      
+        .btn-sec {
+          background: #f2f2f2;
+          color: #111;
+          font-size: 0.9rem;
+          padding: 6px 12px;
+        }
+      
+        .btn-sec:hover {
+          background: #e5e5e5;
+        }
+      
+        .small {
+          font-size: 0.9rem;
+          color: #555;
+          margin-top: 8px;
+        }
+      
+        .warn {
+          background: #fff7e6;
+          border: 1px solid #ffe1a6;
+          padding: 8px 10px;
+          border-radius: 10px;
+          margin: 8px 0;
+          color: #8a5a00;
+          font-size: 0.9rem;
+        }
+      
+        .block {
+          border: 1px dashed #ccc;
+          border-radius: 12px;
+          padding: 12px;
+          margin-top: 14px;
+        }
+      
+        .block-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+          font-weight: 600;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+      
+        .fontpicker {
+          display: flex;
+          gap: 6px;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+      
+        .fontpicker span {
+          font-weight: 600;
+          font-size: 0.9rem;
+          margin-right: 4px;
+        }
+      
+        .chip {
+          background: #f7f7f7;
+          color: #222;
+          border: 1px solid #ddd;
+          border-radius: 999px;
+          padding: 6px 10px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all .2s;
+          font-size: 0.9rem;
+        }
+      
+        .chip:hover {
+          background: #eee;
+        }
+      
+        .chip.active {
+          background: #111;
+          color: #fff;
+          border-color: #111;
+        }
+      
+        .toggle {
+          position: absolute;
+          top: 16px;
+          right: 24px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.9rem;
+        }
+      
+        .toggle input {
+          cursor: pointer;
+        }
+      
+        .btn-group {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+      
+        .options {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          margin-bottom: 10px;
+          flex-wrap: wrap;
+          font-size: 0.9rem;
+        }
+      
+        .options label {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          cursor: pointer;
+        }
+      
+        .options input {
+          cursor: pointer;
+        }
+      
+        @media(max-width:640px) {
+          .title {
+            font-size: 1.8rem;
+          }
+          .toggle {
+            position: static;
+            margin-bottom: 16px;
+          }
+        }
         `}</style>
 
 
