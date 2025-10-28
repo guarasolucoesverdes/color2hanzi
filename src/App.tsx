@@ -601,13 +601,6 @@ export default function App() {
           <p style={{marginTop:'8px'}}>Learn Chinese by colorizing Pinyin and Hanzi by tones</p>
         </footer>
       </main>
-
-      <style>{`
-        @media(min-width:1024px){
-          .sidebar{display:block!important}
-          .mobile-ad{display:none!important}
-        }
-      `}</style>
     </>
   );
 }
