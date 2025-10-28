@@ -560,27 +560,33 @@ export default function App() {
 
             
             <section aria-labelledby="tips-h">
-              <h1 id="tips-h">Best Practices to Get the Most Out of Your Studies</h1>
-              <div className="small" style={{lineHeight:'1.8'}}>
-                <p><span className="tone1">一</span> Write each Pinyin while trying to recall its tone — this strengthens your active memory.</p>
-                <p><span className="tone4">二</span> Compare what you remembered with your course material or previous notes.</p>
-                <p><span className="tone1">三</span> Watch out for auto-correct tools — they may change tones or simplify Pinyin incorrectly.</p>
-                <p><span className="tone4">四</span> This site is designed for learning; it doesn't correct you — it helps you observe, repeat, and improve.</p>
-                <p><span className="tone3">五</span> Hanzi characters are colored in the same order as the Pinyin tones.</p>
-                <p><span className="tone4">六</span> Read out loud. Your voice helps your brain consolidate the sound and tone of each syllable.</p>
-                <p><span className="tone1">七</span> Repeat the combinations you got wrong — but take your time; progress comes from mindful repetition.</p>
-                <p><span className="tone1">八</span> Try making a simple sentence using the words you practiced. Context helps fix learning.</p>
-                <p><span className="tone3">九</span> Review the next day, even if just for a few minutes. That's how knowledge becomes long-term memory.</p>
-                <p><span className="tone2">十</span> Add this page to your favorites for easier access during your next study session.</p>
-                <p style={{marginTop:'30px'}}>
-                  ✨ Did learning feel easier? Share this page with your friends!<br /><br />
+              <h1 id="tips-h">How to Practice Effectively with Color2Hanzi</h1>
+              <div className="small" style={{ lineHeight: '1.8' }}>
+                <p><span className="tone1">一</span> Write each Pinyin while recalling its tone, this strengthens your active memory.</p>
+                <p><span className="tone4">二</span> Compare what you remembered with your notes or course materials, focus on observing rather than correcting.</p>
+                <p><span className="tone1">三</span> Be careful with auto-correct tools, they can distort tones or simplify Pinyin incorrectly.</p>
+                <p><span className="tone4">四</span> This site is a learning companion, it doesn’t correct you, it helps you observe, repeat, and improve through practice.</p>
+                <p><span className="tone3">五</span> Hanzi characters are colored according to the same order as Pinyin tones, use this to train your visual recognition.</p>
+                <p><span className="tone4">六</span> Read out loud, your voice helps your brain connect sound, tone, and meaning more effectively.</p>
+                <p><span className="tone1">七</span> Repeat the combinations you missed, take your time, improvement comes from mindful repetition.</p>
+                <p><span className="tone1">八</span> Create a short sentence using the words you practiced, context helps memory consolidation.</p>
+                <p><span className="tone3">九</span> Review again the next day, even briefly, to strengthen long-term retention.</p>
+                <p><span className="tone2">十</span> Add this page to your favorites for quick access during your next study session.</p>
+                <p style={{ marginTop: '30px' }}>
+                  Did this make your tone practice easier? Share this page with your classmates.<br /><br />
                   <span id="siteLink">color2hanzi.com</span>
-                  <button className="btn" onClick={copyLink} style={{marginLeft:'6px',padding:'4px 10px',fontSize:'0.9rem',borderRadius:'6px'}} aria-label="Copy website link">
-                    📋 Copy link
+                  <button
+                    className="btn"
+                    onClick={copyLink}
+                    style={{ marginLeft: '6px', padding: '4px 10px', fontSize: '0.9rem', borderRadius: '6px' }}
+                    aria-label="Copy website link"
+                  >
+                    Copy link
                   </button>
                 </p>
               </div>
             </section>
+
         </div>
         <footer style={{marginTop:'48px',padding:'24px 0',borderTop:'1px solid #e5e5e5',textAlign:'center',fontSize:'0.85rem',color:'#666'}}>
           <p>© 2025 Color2Hanzi - Free tool for Chinese language learners</p>
