@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,21 +30,24 @@
   <body>
     <div id="root"></div>
 
-    <!-- Script de Aviso de Cookies do AdSense -->
+    <!-- Google AdSense Cookie Consent Script -->
     <script>
       (function() {
         const consent = localStorage.getItem('cookieConsent');
 
         if (consent === 'accepted') {
-          carregarAdsense();
+          loadAdsense();
         } else if (consent !== 'denied') {
           const banner = document.createElement('div');
           banner.id = 'cookie-banner';
           banner.innerHTML = `
-            <p>Este site utiliza cookies do Google AdSense para personalizar anúncios e analisar o tráfego.
-            <a href="/sua-politica-de-privacidade.html" target="_blank">Saiba mais</a></p>
-            <button id="btn-aceitar-cookies">Aceitar</button>
-            <button id="btn-recusar-cookies">Recusar</button>
+            <p>
+              This website uses cookies from Google AdSense to personalize ads and analyze traffic.
+              For more details, see our 
+              <a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+            </p>
+            <button id="btn-accept-cookies">Accept</button>
+            <button id="btn-decline-cookies">Decline</button>
           `;
 
           banner.style.position = 'fixed';
@@ -58,34 +61,39 @@
           banner.style.zIndex = '10000';
           banner.style.fontSize = '0.9rem';
           banner.style.lineHeight = '1.4';
+          banner.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
+          
           banner.querySelectorAll('button').forEach(btn => {
             btn.style.margin = '0 8px';
             btn.style.padding = '6px 12px';
             btn.style.border = 'none';
             btn.style.borderRadius = '4px';
             btn.style.cursor = 'pointer';
+            btn.style.fontWeight = '500';
           });
-          banner.querySelector('#btn-aceitar-cookies').style.background = '#4CAF50';
-          banner.querySelector('#btn-recusar-cookies').style.background = '#f44336';
+
+          banner.querySelector('#btn-accept-cookies').style.background = '#4CAF50';
+          banner.querySelector('#btn-decline-cookies').style.background = '#f44336';
           document.body.appendChild(banner);
 
-          document.getElementById('btn-aceitar-cookies').onclick = function() {
+          document.getElementById('btn-accept-cookies').onclick = function() {
             localStorage.setItem('cookieConsent', 'accepted');
-            removerBanner();
-            carregarAdsense();
+            removeBanner();
+            loadAdsense();
           };
-          document.getElementById('btn-recusar-cookies').onclick = function() {
+
+          document.getElementById('btn-decline-cookies').onclick = function() {
             localStorage.setItem('cookieConsent', 'denied');
-            removerBanner();
+            removeBanner();
           };
         }
 
-        function removerBanner() {
+        function removeBanner() {
           const banner = document.getElementById('cookie-banner');
           if (banner) banner.remove();
         }
 
-        function carregarAdsense() {
+        function loadAdsense() {
           const adsScript = document.createElement('script');
           adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9753698333518224";
           adsScript.async = true;
@@ -95,7 +103,7 @@
       })();
     </script>
 
-    <!-- Script principal do app -->
+    <!-- Main App Script -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
