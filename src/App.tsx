@@ -404,55 +404,7 @@ export default function App() {
         @media(max-width:640px){.title{font-size:1.8rem}.toggle{position:static;margin-bottom:16px}}
         :root { --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif; }
         .hanzi-font { font-family: var(--hanzi-font) !important; }
-        .out {
-          font-size: 1.15rem;
-          line-height: 2.4rem;
-          white-space: pre-wrap;
-          display: block;
-          overflow: visible;
-          padding: 4px 8px;
-          margin: 0;
-          background: transparent;
-          vertical-align: top;
-          text-align: left;
-        }
-        
-        .stack {
-          display: inline-flex;
-          flex-direction: column;      
-          align-items: center;
-          justify-content: center;
-          margin: 0 2px;
-          line-height: 1;
-          text-align: center;
-          vertical-align: middle;
-        }
-        
-
-        .stack-pinyin {
-          font-size: 0.75rem;
-          line-height: 0.9rem;
-          margin-bottom: 0.1rem;        
-          text-align: center;
-        }
-        
-
-        .stack-hanzi {
-          font-size: 1.65rem;
-          line-height: 1.2rem;
-          text-align: center;
-        }
-        
-
-        .out span:not([class*="tone"]) {
-          color: var(--t5);
-        }
-        
-
-        .hanzi-font {
-          font-family: var(--hanzi-font) !important;
-        }
-
+    
         `}</style>
 
 
