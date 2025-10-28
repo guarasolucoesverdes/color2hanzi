@@ -1,42 +1,40 @@
-﻿# ====================================================================== 
-#  Script de Deploy Automático - Projeto Color2Hanzi
+# ====================================================================== 
+#  Script de Deploy - Projeto Color2Hanzi (com deploy automático via GitHub)
 #  Autor: Erik Vieira de Melo
-#  Função: Atualizar build, commit, push e deploy no Vercel automaticamente
 # ======================================================================
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-Write-Host "Iniciando processo de atualização do Color2Hanzi..." -ForegroundColor Cyan
+Write-Host "Iniciando deploy automático do Color2Hanzi..." -ForegroundColor Cyan
 
 # 1. Caminho do projeto
 $projectPath = "K:\Chines\MVP\Color2Hanzi.com\Color2Hanzi"
 Set-Location $projectPath
 
-# 2. Instalar dependências (caso o package.json tenha sido atualizado)
+# 2. Instalar dependências (caso package.json tenha mudado)
 Write-Host "`nVerificando dependências..."
 npm install
 
-# 3. Gerar novo build
-Write-Host "`nGerando build de produção..."
+# 3. Build de produção
+Write-Host "`nGerando build (vite)..."
 npm run build
 
-# 4. Adicionar todas as alterações no Git
+# 4. Atualizar repositório remoto (pull com rebase)
+Write-Host "`nSincronizando com repositório remoto..."
+git pull --rebase origin main
+
+# 5. Adicionar alterações e commitar
 Write-Host "`nPreparando commit..."
 git add .
 
-# 5. Criar commit com timestamp automático
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm"
 $commitMessage = "Atualização automática - Figma build em $timestamp"
-git commit -m "$commitMessage"
+git commit -m "$commitMessage" 2>$null
 
-# 6. Enviar alterações para o GitHub
+# 6. Push para o GitHub
 Write-Host "`nEnviando para GitHub..."
-git push
+git push origin main
 
-# 7. Deploy na Vercel (produção)
-Write-Host "`nPublicando site na Vercel..."
-vercel --prod
-
-# 8. Conclusão
-Write-Host "`nDeploy concluído com sucesso!" -ForegroundColor Green
+# 7. Conclusão
+Write-Host "`n✅ Deploy iniciado automaticamente pela Vercel (via GitHub)" -ForegroundColor Green
 Write-Host "Acesse: https://color2hanzi.vercel.app" -ForegroundColor Yellow
