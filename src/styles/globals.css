@@ -152,15 +152,15 @@
   justify-content: center !important;
   text-align: center !important;
   line-height: 1.1 !important;
-  margin: 0 3px !important;
-  vertical-align: bottom !important;
+  margin: 0 2px !important;
+  vertical-align: middle  !important;
 }
 
 /* Pinyin acima */
 .out .stack-pinyin {
   font-size: 0.8rem !important;
   line-height: 0.8rem !important;
-  margin-bottom: 0.05rem !important;
+  margin-bottom: 0.15rem !important;
   text-align: center !important;
   font-family: 'Inter','Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif !important;
 }
@@ -168,7 +168,7 @@
 /* Hanzi abaixo */
 .out .stack-hanzi {
   font-size: 1.55rem !important;
-  line-height: 1.2rem !important;
+  line-height: 1.35rem !important;
   text-align: center !important;
   font-family: var(--hanzi-font) !important;
 }
