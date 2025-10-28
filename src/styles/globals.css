@@ -1,6 +1,16 @@
 @custom-variant dark (&:is(.dark *));
 
+/* ===================================================== */
+/* BASE VARIABLES AND THEMING */
+/* ===================================================== */
 :root {
+  /* Paleta dos tons do Pinyin */
+  --t1: #FF4B4B;
+  --t2: #FF9F1C;
+  --t3: #2ECC71;
+  --t4: #3498DB;
+  --t5: #777;
+
   --font-size: 16px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
@@ -78,6 +88,9 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* ===================================================== */
+/* THEME INLINE VARIABLES */
+/* ===================================================== */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -119,6 +132,9 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ===================================================== */
+/* BASE LAYER */
+/* ===================================================== */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -129,7 +145,9 @@
   }
 }
 
-/* === Color2Hanzi Button Styling === */
+/* ===================================================== */
+/* Color2Hanzi Buttons */
+/* ===================================================== */
 .btn-group {
   display: flex;
   gap: 0.5rem;
@@ -178,9 +196,11 @@
   color: var(--color-primary-foreground);
 }
 
-/* ================================ */
-/*  ADIÇÕES PARA SINCRONIZAR FONTE  */
-/* ================================ */
+/* ===================================================== */
+/* Color2Hanzi — Font & Empilhamento */
+/* ===================================================== */
+
+/* Fonta Hanzi padrão */
 :root {
   --hanzi-font: 'Noto Serif SC','Noto Serif Simplified Chinese',serif;
 }
@@ -190,11 +210,7 @@
   transition: font-family 0.2s ease;
 }
 
-/* =============================================== */
-/* Color2Hanzi — Correção de empilhamento e tons   */
-/* =============================================== */
-
-/* 1. Define layout base da saída */
+/* Estrutura e layout dos caracteres */
 .out {
   display: inline-block !important;
   white-space: pre-wrap !important;
@@ -202,10 +218,10 @@
   padding: 0 !important;
   margin: 0 !important;
   vertical-align: middle !important;
-  color: var(--t5); /* tudo que não for tom ganha o tom neutro */
+  color: var(--t5);
 }
 
-/* 2. Define a estrutura do empilhamento vertical */
+/* Empilhamento pinyin + hanzi */
 .out .stack {
   display: inline-flex;
   flex-direction: column;
@@ -216,7 +232,7 @@
   vertical-align: middle;
   overflow: visible;
   line-height: 1;
-  height: 3rem; /* controla distância entre pinyin e hanzi */
+  height: 3rem;
 }
 
 .out .stack-pinyin {
@@ -235,18 +251,15 @@
   text-align: center;
   position: relative;
   z-index: 0;
+  font-family: var(--hanzi-font) !important;
 }
 
-/* 3. Faz com que qualquer caractere neutro (sem tom) use a cor do 5º tom */
+/* Cor neutra para símbolos e sinais */
 .out span:not([class*="tone"]) {
   color: var(--t5) !important;
 }
 
-/* 4. Garante que tone5 também tenha o mesmo comportamento */
+/* Tom neutro */
 .tone5 {
   color: var(--t5) !important;
 }
-
-
-
-
