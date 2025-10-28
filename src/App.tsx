@@ -355,14 +355,14 @@ export default function App() {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
     script.async = true;
-    document.documentElement.style.setProperty('--hanzi-font', fonts[font]);
-}, [font]);
+    document.head.appendChild(script);
   }, []);
 
-  // Atualiza apenas a variável de fonte; não processa automaticamente
+  // Atualiza a fonte dinamicamente
   useEffect(() => {
     document.documentElement.style.setProperty('--hanzi-font', fonts[font]);
   }, [font]);
+
 
   return (
     <>
